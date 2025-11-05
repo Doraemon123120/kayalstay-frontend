@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Favorites from "./pages/Favorites";
 import Booking from "./pages/Booking";
 import MyBookings from "./pages/MyBookings";
+import Profile from "./pages/Profile";
 import { getToken } from "./services/api";
 import { useState, useEffect } from "react";
 
@@ -167,6 +168,11 @@ export default function App() {
                 >
                   ➕ Post a Property
                 </Link>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Link to="/profile" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>
+                    Profile
+                  </Link>
+                </div>
                 <Link to="/dashboard" style={{ color: '#13343B', textDecoration: 'none' }}>Dashboard</Link>
                 <button
                   onClick={() => { localStorage.clear(); window.location.href = '/'; }}
@@ -224,6 +230,7 @@ export default function App() {
           <Route path="/favorites" element={isAuthed ? <Favorites /> : <Navigate to="/login" />} />
           <Route path="/book/:id" element={isAuthed ? <Booking /> : <Navigate to="/login" />} />
           <Route path="/my-bookings" element={isAuthed ? <MyBookings /> : <Navigate to="/login" />} />
+          <Route path="/profile" element={isAuthed ? <Profile /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/new" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />

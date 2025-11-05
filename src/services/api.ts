@@ -34,6 +34,16 @@ export const removeFavorite = (propertyId: string) =>
 export const getFavorites = () => 
   api.get(`/auth/favorites`);
 
+// Profile functions
+export const getProfile = () => 
+  api.get(`/profile`);
+
+export const updateProfile = (profileData: any) => 
+  api.put(`/profile`, profileData);
+
+export const updateAvatar = (avatar: string) => 
+  api.put(`/profile/avatar`, { avatar });
+
 // Booking functions
 export const createBooking = (bookingData: any) => 
   api.post(`/bookings`, bookingData);

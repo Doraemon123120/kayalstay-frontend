@@ -50,39 +50,99 @@ export default function Dashboard() {
         }}>Manage your property listings on KAYALSTAY</p>
       </div>
 
-      {/* Action Bar */}
+      {/* Profile and Action Bar */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '32px'
+        marginBottom: '32px',
+        gap: '20px'
       }}>
-        <h2 style={{
-          fontSize: '28px',
-          fontWeight: 700,
-          color: '#13343B'
-        }}>
-          📋 My Listings ({items.length})
-        </h2>
-        <Link
-          to="/new"
-          style={{
-            background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-            color: 'white',
-            padding: '14px 32px',
-            borderRadius: '50px',
-            textDecoration: 'none',
-            fontWeight: 700,
-            fontSize: '16px',
-            boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
-            transition: 'all 0.3s',
-            display: 'inline-flex',
+        <div style={{ flex: 1 }}>
+          <Link to="/profile" style={{
+            display: 'flex',
             alignItems: 'center',
-            gap: '8px'
+            gap: '12px',
+            background: 'white',
+            padding: '16px 24px',
+            borderRadius: '16px',
+            textDecoration: 'none',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(6, 182, 212, 0.1)',
+            transition: 'all 0.3s'
           }}
-        >
-          ➕ Add New Property
-        </Link>
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(6, 182, 212, 0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.08)';
+          }}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '20px',
+              fontWeight: 700
+            }}>
+              {user?.name?.charAt(0) || 'U'}
+            </div>
+            <div>
+              <div style={{
+                fontSize: '16px',
+                fontWeight: 700,
+                color: '#13343B',
+                marginBottom: '2px'
+              }}>
+                {user?.name || 'User'}
+              </div>
+              <div style={{
+                fontSize: '13px',
+                color: '#626C71'
+              }}>
+                Manage your profile
+              </div>
+            </div>
+          </Link>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <h2 style={{
+            fontSize: '28px',
+            fontWeight: 700,
+            color: '#13343B',
+            margin: 0,
+            alignSelf: 'center'
+          }}>
+            📋 My Listings ({items.length})
+          </h2>
+          <Link
+            to="/new"
+            style={{
+              background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+              color: 'white',
+              padding: '14px 32px',
+              borderRadius: '50px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '16px',
+              boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+              transition: 'all 0.3s',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            ➕ Add New Property
+          </Link>
+        </div>
       </div>
 
       {/* Listings Grid */}
@@ -200,15 +260,12 @@ export default function Dashboard() {
                     padding: '6px 12px',
                     borderRadius: '50px',
                     fontSize: '12px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
+                    fontWeight: 700
                   }}>
-                    📷 {p.images.length}
+                    {p.images.length} {p.images.length === 1 ? 'photo' : 'photos'}
                   </div>
                 )}
-
+                
                 {/* Property Type Badge */}
                 <div style={{
                   position: 'absolute',
@@ -226,12 +283,10 @@ export default function Dashboard() {
                   {p.propertyType.toUpperCase()}
                 </div>
               </div>
-              </Link>
-
+              
               {/* Property Details */}
               <div style={{ padding: '20px' }}>
-                <Link to={`/listings/${p._id}`} style={{ textDecoration: 'none' }}>
-                  <h3 style={{
+                <h3 style={{
                   fontSize: '18px',
                   fontWeight: 700,
                   color: '#13343B',
@@ -242,7 +297,7 @@ export default function Dashboard() {
                 }}>
                   {p.title}
                 </h3>
-                </Link>
+                
                 <div style={{
                   fontSize: '14px',
                   color: '#626C71',
@@ -253,13 +308,13 @@ export default function Dashboard() {
                 }}>
                   📍 {p.city}
                 </div>
+                
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   paddingTop: '12px',
-                  borderTop: '1px solid rgba(6, 182, 212, 0.1)',
-                  marginBottom: '12px'
+                  borderTop: '1px solid rgba(6, 182, 212, 0.1)'
                 }}>
                   <div style={{
                     fontSize: '24px',
@@ -276,40 +331,44 @@ export default function Dashboard() {
                     fontWeight: 600
                   }}>/month</div>
                 </div>
-
-                {/* Edit Button */}
-                <Link
-                  to={`/edit/${p._id}`}
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    display: 'block',
-                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-                    color: 'white',
-                    padding: '10px 20px',
-                    borderRadius: '10px',
-                    textDecoration: 'none',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 92, 246, 0.4)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.3)';
-                  }}
-                >
-                  ✏️ Edit Property
-                </Link>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            </Link>
+            
+            {/* Edit Button */}
+            <Link
+              to={`/edit/${p._id}`}
+              style={{
+                position: 'absolute',
+                bottom: '12px',
+                right: '12px',
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '50px',
+                textDecoration: 'none',
+                fontWeight: 700,
+                fontSize: '12px',
+                boxShadow: '0 4px 10px rgba(139, 92, 246, 0.3)',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 15px rgba(139, 92, 246, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 10px rgba(139, 92, 246, 0.3)';
+              }}
+            >
+              ✏️ Edit
+            </Link>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
   );
 }

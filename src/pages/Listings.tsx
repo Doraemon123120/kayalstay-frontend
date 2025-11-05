@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../services/api";
+import { api, addFavorite, removeFavorite, getFavorites } from "../services/api";
 import { Link } from "react-router-dom";
 
 type Property = {
@@ -22,6 +22,7 @@ export default function Listings() {
   const [propertyType, setPropertyType] = useState("");
   const [amenities, setAmenities] = useState("");
   const [sort, setSort] = useState("newest");
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   const load = async () => {
     setLoading(true);
@@ -37,7 +38,20 @@ export default function Listings() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  // Load user favorites
+  const loadFavorites = async () => {
+    try {
+      const res = await getFavorites();
+      setFavorites(res.data.favorites.map((fav: any) => fav._id));
+    } catch (err) {
+      console.error("Failed to load favorites", err);
+    }
+  };
+
+  useEffect(() => { 
+    load(); 
+    loadFavorites();
+  }, []);
 
   const typeEmoji: any = {
     room: '🛏️',
@@ -45,6 +59,21 @@ export default function Listings() {
     pg: '🏠',
     hostel: '🏘️',
     house: '🏡'
+  };
+
+  // Toggle favorite status
+  const toggleFavorite = async (propertyId: string) => {
+    try {
+      if (favorites.includes(propertyId)) {
+        await removeFavorite(propertyId);
+        setFavorites(favorites.filter(id => id !== propertyId));
+      } else {
+        await addFavorite(propertyId);
+        setFavorites([...favorites, propertyId]);
+      }
+    } catch (err) {
+      console.error("Failed to update favorite", err);
+    }
   };
 
   return (
@@ -334,113 +363,147 @@ export default function Listings() {
             gap: '24px'
           }}>
             {items.map((p) => (
-              <Link
-                key={p._id}
-                to={`/listings/${p._id}`}
-                style={{
-                  background: 'white',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-                  transition: 'all 0.3s',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(6, 182, 212, 0.1)',
-                  display: 'block'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(6, 182, 212, 0.15)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06)';
-                }}
-              >
-                <div style={{ position: 'relative' }}>
-                  {p.images && p.images.length > 0 && p.images[0]?.url ? (
-                    <img
-                      src={p.images[0].url}
-                      alt={p.title}
-                      style={{
+              <div key={p._id} style={{ position: 'relative' }}>
+                <Link
+                  to={`/listings/${p._id}`}
+                  style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s',
+                    textDecoration: 'none',
+                    border: '1px solid rgba(6, 182, 212, 0.1)',
+                    display: 'block'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(6, 182, 212, 0.15)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06)';
+                  }}
+                >
+                  <div style={{ position: 'relative' }}>
+                    {p.images && p.images.length > 0 && p.images[0]?.url ? (
+                      <img
+                        src={p.images[0].url}
+                        alt={p.title}
+                        style={{
+                          height: '200px',
+                          width: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : (
+                      <div style={{
                         height: '200px',
-                        width: '100%',
-                        objectFit: 'cover'
-                      }}
-                    />
-                  ) : (
+                        background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '64px'
+                      }}>
+                        {typeEmoji[p.propertyType] || '🏠'}
+                      </div>
+                    )}
                     <div style={{
-                      height: '200px',
-                      background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(10px)',
+                      padding: '6px 12px',
+                      borderRadius: '50px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      color: '#06B6D4',
+                      border: '1px solid rgba(6, 182, 212, 0.2)'
+                    }}>
+                      {p.propertyType.toUpperCase()}
+                    </div>
+                  </div>
+                  <div style={{ padding: '20px' }}>
+                    <h3 style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#13343B',
+                      marginBottom: '8px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {p.title}
+                    </h3>
+                    <div style={{
+                      fontSize: '14px',
+                      color: '#626C71',
+                      marginBottom: '12px',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '64px'
+                      gap: '4px'
                     }}>
-                      {typeEmoji[p.propertyType] || '🏠'}
+                      📍 {p.city}
                     </div>
-                  )}
-                  <div style={{
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      paddingTop: '12px',
+                      borderTop: '1px solid rgba(6, 182, 212, 0.1)'
+                    }}>
+                      <div style={{
+                        fontSize: '24px',
+                        fontWeight: 800,
+                        background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>
+                        ₹{p.price.toLocaleString()}
+                      </div>
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#626C71',
+                        fontWeight: 600
+                      }}>/month</div>
+                    </div>
+                  </div>
+                </Link>
+                {/* Favorite Button */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite(p._id);
+                  }}
+                  style={{
                     position: 'absolute',
                     top: '12px',
-                    right: '12px',
+                    left: '12px',
                     background: 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(10px)',
-                    padding: '6px 12px',
-                    borderRadius: '50px',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    color: '#06B6D4',
-                    border: '1px solid rgba(6, 182, 212, 0.2)'
-                  }}>
-                    {p.propertyType.toUpperCase()}
-                  </div>
-                </div>
-                <div style={{ padding: '20px' }}>
-                  <h3 style={{
+                    border: '1px solid rgba(6, 182, 212, 0.2)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
                     fontSize: '18px',
-                    fontWeight: 700,
-                    color: '#13343B',
-                    marginBottom: '8px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {p.title}
-                  </h3>
-                  <div style={{
-                    fontSize: '14px',
-                    color: '#626C71',
-                    marginBottom: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    📍 {p.city}
-                  </div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingTop: '12px',
-                    borderTop: '1px solid rgba(6, 182, 212, 0.1)'
-                  }}>
-                    <div style={{
-                      fontSize: '24px',
-                      fontWeight: 800,
-                      background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}>
-                      ₹{p.price.toLocaleString()}
-                    </div>
-                    <div style={{
-                      fontSize: '12px',
-                      color: '#626C71',
-                      fontWeight: 600
-                    }}>/month</div>
-                  </div>
-                </div>
-              </Link>
+                    color: favorites.includes(p._id) ? '#FF4757' : '#C4C4C4',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {favorites.includes(p._id) ? '❤️' : '🤍'}
+                </button>
+              </div>
             ))}
           </div>
         </>

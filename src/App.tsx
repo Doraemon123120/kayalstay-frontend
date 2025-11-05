@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import PropertyForm from "./pages/PropertyForm";
 import PropertyDetail from "./pages/PropertyDetail";
 import Dashboard from "./pages/Dashboard";
+import Favorites from "./pages/Favorites";
 import { getToken } from "./services/api";
 import { useState, useEffect } from "react";
 
@@ -143,6 +144,7 @@ export default function App() {
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>
             {isAuthed ? (
               <>
+                <Link to="/favorites" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Favorites</Link>
                 <Link
                   to="/new"
                   style={{
@@ -216,6 +218,7 @@ export default function App() {
           <Route path="/" element={<Navigate to="/listings" />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/listings/:id" element={<PropertyDetail />} />
+          <Route path="/favorites" element={isAuthed ? <Favorites /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/new" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />

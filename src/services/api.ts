@@ -23,3 +23,13 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+// Favorite functions
+export const addFavorite = (propertyId: string) => 
+  api.post(`/auth/favorites/${propertyId}`);
+
+export const removeFavorite = (propertyId: string) => 
+  api.delete(`/auth/favorites/${propertyId}`);
+
+export const getFavorites = () => 
+  api.get(`/auth/favorites`);

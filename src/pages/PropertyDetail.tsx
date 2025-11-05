@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -198,9 +198,9 @@ export default function PropertyDetail() {
               background: 'white',
               borderRadius: '20px',
               padding: '32px',
-              marginTop: '24px',
               boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)',
-              border: '1px solid rgba(6, 182, 212, 0.1)'
+              border: '1px solid rgba(6, 182, 212, 0.1)',
+              marginTop: '24px'
             }}>
               <h2 style={{
                 fontSize: '24px',
@@ -211,249 +211,242 @@ export default function PropertyDetail() {
                 alignItems: 'center',
                 gap: '8px'
               }}>
-                ⭐ Amenities
+                ✨ Amenities
               </h2>
               <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
                 gap: '12px'
               }}>
                 {prop.amenities.map((amenity: string, i: number) => (
                   <div
                     key={i}
                     style={{
-                      background: 'rgba(6, 182, 212, 0.08)',
-                      padding: '10px 18px',
-                      borderRadius: '50px',
+                      background: 'rgba(6, 182, 212, 0.05)',
+                      border: '1px solid rgba(6, 182, 212, 0.1)',
+                      borderRadius: '12px',
+                      padding: '12px',
+                      textAlign: 'center',
                       fontSize: '14px',
-                      fontWeight: 600,
-                      color: '#06B6D4',
-                      border: '2px solid rgba(6, 182, 212, 0.2)'
+                      fontWeight: 500,
+                      color: '#06B6D4'
                     }}
                   >
-                    ✓ {amenity}
+                    {amenity}
                   </div>
                 ))}
               </div>
             </div>
           )}
-
-          {/* Location */}
-          {prop.address && (
-            <div style={{
-              background: 'white',
-              borderRadius: '20px',
-              padding: '32px',
-              marginTop: '24px',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)',
-              border: '1px solid rgba(6, 182, 212, 0.1)'
-            }}>
-              <h2 style={{
-                fontSize: '24px',
-                fontWeight: 700,
-                color: '#13343B',
-                marginBottom: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                📍 Location
-              </h2>
-              <p style={{
-                fontSize: '15px',
-                color: '#626C71',
-                lineHeight: '1.6'
-              }}>
-                {prop.address}
-              </p>
-            </div>
-          )}
         </div>
 
-        {/* Right Column - Price & Contact Card */}
-        <div style={{ position: 'sticky', top: '20px', height: 'fit-content' }}>
+        {/* Right Column - Booking Card */}
+        <div>
           <div style={{
+            position: 'sticky',
+            top: '24px',
             background: 'white',
             borderRadius: '20px',
             padding: '32px',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.12)',
-            border: '2px solid rgba(6, 182, 212, 0.15)'
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(6, 182, 212, 0.1)'
           }}>
-            {/* Title */}
-            <h1 style={{
-              fontSize: '28px',
+            <div style={{
+              fontSize: '32px',
               fontWeight: 800,
-              color: '#13343B',
-              marginBottom: '12px',
-              lineHeight: '1.3'
+              background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '8px'
             }}>
-              {prop.title}
-            </h1>
-
-            {/* City */}
+              ₹{prop.price.toLocaleString()}
+            </div>
             <div style={{
-              fontSize: '16px',
+              fontSize: '14px',
               color: '#626C71',
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontWeight: 500
+              fontWeight: 500,
+              marginBottom: '24px'
             }}>
-              📍 {prop.city}
+              per month
             </div>
 
-            {/* Price */}
             <div style={{
-              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-              padding: '24px',
-              borderRadius: '16px',
-              marginBottom: '24px',
-              textAlign: 'center',
-              border: '2px solid rgba(6, 182, 212, 0.2)'
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '16px',
+              marginBottom: '24px'
             }}>
-              <div style={{
-                fontSize: '14px',
-                color: '#626C71',
-                marginBottom: '8px',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}>
-                Monthly Rent
+              <div>
+                <div style={{
+                  fontSize: '12px',
+                  color: '#626C71',
+                  marginBottom: '4px'
+                }}>
+                  Property Type
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#13343B'
+                }}>
+                  {prop.propertyType.charAt(0).toUpperCase() + prop.propertyType.slice(1)}
+                </div>
               </div>
-              <div style={{
-                fontSize: '48px',
-                fontWeight: 900,
-                background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                lineHeight: '1'
-              }}>
-                ₹{prop.price.toLocaleString()}
+              <div>
+                <div style={{
+                  fontSize: '12px',
+                  color: '#626C71',
+                  marginBottom: '4px'
+                }}>
+                  Location
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#13343B'
+                }}>
+                  {prop.city}
+                </div>
               </div>
             </div>
 
-            {/* Contact Section */}
-            <div style={{
-              paddingTop: '24px',
-              borderTop: '2px solid rgba(6, 182, 212, 0.1)',
-              marginBottom: '20px'
-            }}>
-              <h3 style={{
-                fontSize: '18px',
+            <Link
+              to={`/book/${prop._id}`}
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '16px',
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                color: 'white',
+                borderRadius: '12px',
+                textDecoration: 'none',
                 fontWeight: 700,
-                color: '#13343B',
+                fontSize: '16px',
+                textAlign: 'center',
+                boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
                 marginBottom: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                📞 Contact Owner
-              </h3>
+                transition: 'all 0.3s'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(6, 182, 212, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 182, 212, 0.3)';
+              }}
+            >
+              📅 Book Now
+            </Link>
 
-              {prop.contactPhone && (
-                <a
-                  href={`tel:${prop.contactPhone}`}
-                  style={{
-                    display: 'block',
-                    background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                    color: 'white',
-                    padding: '14px 24px',
-                    borderRadius: '12px',
-                    textDecoration: 'none',
-                    fontWeight: 700,
-                    fontSize: '16px',
-                    textAlign: 'center',
-                    marginBottom: '12px',
-                    boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(6, 182, 212, 0.4)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 182, 212, 0.3)';
-                  }}
-                >
-                  📱 {prop.contactPhone}
-                </a>
-              )}
-
-              {prop.contactEmail && (
-                <a
-                  href={`mailto:${prop.contactEmail}`}
-                  style={{
-                    display: 'block',
-                    background: 'white',
-                    color: '#06B6D4',
-                    padding: '14px 24px',
-                    borderRadius: '12px',
-                    textDecoration: 'none',
-                    fontWeight: 700,
-                    fontSize: '16px',
-                    textAlign: 'center',
-                    border: '2px solid #06B6D4',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = '#06B6D4';
-                    e.currentTarget.style.color = 'white';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'white';
-                    e.currentTarget.style.color = '#06B6D4';
-                  }}
-                >
-                  ✉️ Send Email
-                </a>
-              )}
-            </div>
-
-            {/* WhatsApp Button */}
-            {prop.contactPhone && (
-              <a
-                href={`https://wa.me/${prop.contactPhone.replace(/[^0-9]/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'block',
-                  background: 'linear-gradient(135deg, #25D366 0%, #1DA851 100%)',
-                  color: 'white',
-                  padding: '14px 24px',
-                  borderRadius: '12px',
-                  textDecoration: 'none',
-                  fontWeight: 700,
-                  fontSize: '16px',
-                  textAlign: 'center',
-                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)',
-                  transition: 'all 0.3s',
-                  marginTop: '12px'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.4)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(37, 211, 102, 0.3)';
-                }}
-              >
-                💬 WhatsApp Owner
-              </a>
-            )}
-
-            <p style={{
+            <div style={{
               fontSize: '12px',
               color: '#626C71',
               textAlign: 'center',
-              marginTop: '20px',
-              lineHeight: '1.5'
+              lineHeight: '1.6'
             }}>
-              Please verify property details before making any payment
-            </p>
+              You won't be charged yet. By selecting "Book Now", you agree to KAYALSTAY's Terms of Service.
+            </div>
+          </div>
+
+          {/* Owner Info */}
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '24px',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(6, 182, 212, 0.1)',
+            marginTop: '24px'
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 700,
+              color: '#13343B',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              👤 Property Owner
+            </h3>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '16px'
+            }}>
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '20px',
+                fontWeight: 700
+              }}>
+                {prop.owner?.name?.charAt(0) || 'O'}
+              </div>
+              <div>
+                <div style={{
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#13343B'
+                }}>
+                  {prop.owner?.name || 'Property Owner'}
+                </div>
+                <div style={{
+                  fontSize: '13px',
+                  color: '#626C71'
+                }}>
+                  Property Owner
+                </div>
+              </div>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px'
+            }}>
+              <button
+                style={{
+                  padding: '12px',
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  color: '#06B6D4',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(6, 182, 212, 0.2)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                📞 Call
+              </button>
+              <button
+                style={{
+                  padding: '12px',
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  color: '#06B6D4',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(6, 182, 212, 0.2)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                💬 Message
+              </button>
+            </div>
           </div>
         </div>
       </div>

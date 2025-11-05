@@ -33,3 +33,19 @@ export const removeFavorite = (propertyId: string) =>
 
 export const getFavorites = () => 
   api.get(`/auth/favorites`);
+
+// Booking functions
+export const createBooking = (bookingData: any) => 
+  api.post(`/bookings`, bookingData);
+
+export const getMyBookings = () => 
+  api.get(`/bookings/my-bookings`);
+
+export const getBooking = (id: string) => 
+  api.get(`/bookings/${id}`);
+
+export const cancelBooking = (id: string) => 
+  api.put(`/bookings/${id}/cancel`);
+
+export const getPropertyBookings = (propertyId: string) => 
+  api.get(`/bookings/property/${propertyId}`);

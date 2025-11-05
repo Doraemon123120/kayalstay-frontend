@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import Reviews from "../components/Reviews";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -238,6 +239,18 @@ export default function PropertyDetail() {
               </div>
             </div>
           )}
+
+          {/* Reviews Section */}
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '32px',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(6, 182, 212, 0.1)',
+            marginTop: '24px'
+          }}>
+            <Reviews propertyId={prop._id} />
+          </div>
         </div>
 
         {/* Right Column - Booking Card */}

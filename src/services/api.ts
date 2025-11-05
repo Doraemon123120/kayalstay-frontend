@@ -44,6 +44,22 @@ export const updateProfile = (profileData: any) =>
 export const updateAvatar = (avatar: string) => 
   api.put(`/profile/avatar`, { avatar });
 
+// Review functions
+export const createReview = (reviewData: any) => 
+  api.post(`/reviews`, reviewData);
+
+export const getPropertyReviews = (propertyId: string, page: number = 1, limit: number = 10) => 
+  api.get(`/reviews/property/${propertyId}?page=${page}&limit=${limit}`);
+
+export const getPropertyAverageRating = (propertyId: string) => 
+  api.get(`/reviews/property/${propertyId}/average`);
+
+export const updateReview = (id: string, reviewData: any) => 
+  api.put(`/reviews/${id}`, reviewData);
+
+export const deleteReview = (id: string) => 
+  api.delete(`/reviews/${id}`);
+
 // Booking functions
 export const createBooking = (bookingData: any) => 
   api.post(`/bookings`, bookingData);

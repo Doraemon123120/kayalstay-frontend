@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, addFavorite, removeFavorite, getFavorites } from "../services/api";
+import { api, addFavorite, removeFavorite, getFavorites, getPropertyAverageRating } from "../services/api";
 import { Link } from "react-router-dom";
 
 type Property = {
@@ -11,6 +11,8 @@ type Property = {
   images?: { url: string }[];
   amenities?: string[];
   available?: boolean;
+  averageRating?: number;
+  totalReviews?: number;
 };
 
 export default function Listings() {
@@ -34,7 +36,28 @@ export default function Listings() {
     if (amenities) params.amenities = amenities;
     params.sort = sort;
     const res = await api.get("/properties", { params });
-    setItems(res.data.items);
+    
+    // Fetch average ratings for each property
+    const propertiesWithRatings = await Promise.all(
+      res.data.items.map(async (property: Property) => {
+        try {
+          const ratingRes = await getPropertyAverageRating(property._id);
+          return {
+            ...property,
+            averageRating: ratingRes.data.averageRating,
+            totalReviews: ratingRes.data.totalReviews
+          };
+        } catch (err) {
+          return {
+            ...property,
+            averageRating: 0,
+            totalReviews: 0
+          };
+        }
+      })
+    );
+    
+    setItems(propertiesWithRatings);
     setLoading(false);
   };
 
@@ -446,6 +469,44 @@ export default function Listings() {
                     }}>
                       📍 {p.city}
                     </div>
+                    
+                    {/* Rating Display */}
+                    {p.averageRating && p.averageRating > 0 && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        marginBottom: '12px'
+                      }}>
+                        <div style={{ display: 'flex', gap: '2px' }}>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span 
+                              key={star} 
+                              style={{ 
+                                fontSize: '14px',
+                                color: star <= p.averageRating! ? '#FBBF24' : '#E5E7EB'
+                              }}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                        <span style={{ 
+                          fontSize: '13px', 
+                          fontWeight: 600, 
+                          color: '#13343B' 
+                        }}>
+                          {p.averageRating.toFixed(1)}
+                        </span>
+                        <span style={{ 
+                          fontSize: '12px', 
+                          color: '#626C71' 
+                        }}>
+                          ({p.totalReviews})
+                        </span>
+                      </div>
+                    )}
+                    
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',

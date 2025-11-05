@@ -60,6 +60,19 @@ export const updateReview = (id: string, reviewData: any) =>
 export const deleteReview = (id: string) => 
   api.delete(`/reviews/${id}`);
 
+// Payment functions
+export const createPaymentIntent = (paymentData: any) => 
+  api.post(`/payments/create-payment-intent`, paymentData);
+
+export const confirmPayment = (paymentData: any) => 
+  api.post(`/payments/confirm`, paymentData);
+
+export const getPayment = (id: string) => 
+  api.get(`/payments/${id}`);
+
+export const refundPayment = (id: string) => 
+  api.post(`/payments/${id}/refund`);
+
 // Booking functions
 export const createBooking = (bookingData: any) => 
   api.post(`/bookings`, bookingData);

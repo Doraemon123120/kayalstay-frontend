@@ -15,6 +15,7 @@ type Booking = {
   endDate: string;
   totalPrice: number;
   status: string;
+  paymentStatus: string;
   guests: number;
   createdAt: string;
 };
@@ -61,6 +62,16 @@ export default function MyBookings() {
       case "pending": return "#F59E0B";
       case "cancelled": return "#EF4444";
       case "completed": return "#8B5CF6";
+      default: return "#6B7280";
+    }
+  };
+
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case "paid": return "#10B981";
+      case "pending": return "#F59E0B";
+      case "failed": return "#EF4444";
+      case "refunded": return "#8B5CF6";
       default: return "#6B7280";
     }
   };
@@ -210,17 +221,30 @@ export default function MyBookings() {
                   }}>
                     {booking.property.title}
                   </h3>
-                  <span style={{
-                    background: getStatusColor(booking.status),
-                    color: 'white',
-                    padding: '4px 10px',
-                    borderRadius: '50px',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    textTransform: 'capitalize'
-                  }}>
-                    {booking.status}
-                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{
+                      background: getStatusColor(booking.status),
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: '50px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textTransform: 'capitalize'
+                    }}>
+                      {booking.status}
+                    </span>
+                    <span style={{
+                      background: getPaymentStatusColor(booking.paymentStatus),
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: '50px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textTransform: 'capitalize'
+                    }}>
+                      {booking.paymentStatus}
+                    </span>
+                  </div>
                 </div>
                 
                 <div style={{

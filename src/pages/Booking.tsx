@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api, createBooking } from "../services/api";
+import PaymentForm from "../components/PaymentForm";
 
 type Property = {
   _id: string;
@@ -22,6 +23,8 @@ export default function Booking() {
   const [specialRequests, setSpecialRequests] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [bookingId, setBookingId] = useState("");
+  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -54,13 +57,22 @@ export default function Booking() {
         specialRequests
       };
 
-      await createBooking(bookingData);
-      navigate("/my-bookings");
+      const res = await createBooking(bookingData);
+      setBookingId(res.data._id);
+      setShowPayment(true);
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to create booking");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handlePaymentSuccess = () => {
+    navigate("/my-bookings");
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPayment(false);
   };
 
   const calculateTotalPrice = () => {
@@ -124,7 +136,7 @@ export default function Booking() {
             borderRadius: '50px',
             border: 'none',
             fontSize: '16px',
-            fontWeight: 700,
+            fontWeight: 700',
             cursor: 'pointer',
             boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
           }}
@@ -225,188 +237,200 @@ export default function Booking() {
           </div>
         </div>
 
-        {/* Booking Form */}
-        <div style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '24px',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-          border: '1px solid rgba(6, 182, 212, 0.1)'
-        }}>
-          <h2 style={{
-            fontSize: '24px',
-            fontWeight: 700,
-            color: '#13343B',
-            marginBottom: '20px'
-          }}>
-            Booking Information
-          </h2>
-          
-          {error && (
+        {/* Booking Form or Payment Form */}
+        <div>
+          {showPayment ? (
+            <PaymentForm
+              bookingId={bookingId}
+              amount={calculateTotalPrice()}
+              currency="INR"
+              onPaymentSuccess={handlePaymentSuccess}
+              onPaymentCancel={handlePaymentCancel}
+            />
+          ) : (
             <div style={{
-              background: '#FEF2F2',
-              border: '1px solid #FECACA',
-              color: '#B91C1C',
-              padding: '12px',
-              borderRadius: '8px',
-              marginBottom: '20px'
+              background: 'white',
+              borderRadius: '16px',
+              padding: '24px',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+              border: '1px solid rgba(6, 182, 212, 0.1)'
             }}>
-              {error}
+              <h2 style={{
+                fontSize: '24px',
+                fontWeight: 700,
+                color: '#13343B',
+                marginBottom: '20px'
+              }}>
+                Booking Information
+              </h2>
+              
+              {error && (
+                <div style={{
+                  background: '#FEF2F2',
+                  border: '1px solid #FECACA',
+                  color: '#B91C1C',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  marginBottom: '20px'
+                }}>
+                  {error}
+                </div>
+              )}
+              
+              <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#13343B',
+                    fontWeight: 600,
+                    marginBottom: '8px',
+                    fontSize: '14px'
+                  }}>
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '2px solid rgba(6, 182, 212, 0.2)',
+                      borderRadius: '10px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#13343B',
+                    fontWeight: 600,
+                    marginBottom: '8px',
+                    fontSize: '14px'
+                  }}>
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '2px solid rgba(6, 182, 212, 0.2)',
+                      borderRadius: '10px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#13343B',
+                    fontWeight: 600,
+                    marginBottom: '8px',
+                    fontSize: '14px'
+                  }}>
+                    Number of Guests
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={guests}
+                    onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '2px solid rgba(6, 182, 212, 0.2)',
+                      borderRadius: '10px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{
+                    display: 'block',
+                    color: '#13343B',
+                    fontWeight: 600,
+                    marginBottom: '8px',
+                    fontSize: '14px'
+                  }}>
+                    Special Requests (Optional)
+                  </label>
+                  <textarea
+                    value={specialRequests}
+                    onChange={(e) => setSpecialRequests(e.target.value)}
+                    rows={3}
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '2px solid rgba(6, 182, 212, 0.2)',
+                      borderRadius: '10px',
+                      fontSize: '14px',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                </div>
+                
+                {startDate && endDate && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    marginBottom: '20px',
+                    color: 'white'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '8px'
+                    }}>
+                      <span>₹{property.price.toLocaleString()} × {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))} days</span>
+                      <span>₹{calculateTotalPrice().toLocaleString()}</span>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontWeight: 700,
+                      fontSize: '18px',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.3)',
+                      paddingTop: '12px'
+                    }}>
+                      <span>Total</span>
+                      <span>₹{calculateTotalPrice().toLocaleString()}</span>
+                    </div>
+                  </div>
+                )}
+                
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    width: '100%',
+                    padding: '16px',
+                    background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '16px',
+                    fontWeight: 700,
+                    cursor: submitting ? 'not-allowed' : 'pointer',
+                    boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
+                    opacity: submitting ? 0.7 : 1
+                  }}
+                >
+                  {submitting ? 'Processing...' : 'Proceed to Payment'}
+                </button>
+              </form>
             </div>
           )}
-          
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{
-                display: 'block',
-                color: '#13343B',
-                fontWeight: 600,
-                marginBottom: '8px',
-                fontSize: '14px'
-              }}>
-                Start Date
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  border: '2px solid rgba(6, 182, 212, 0.2)',
-                  borderRadius: '10px',
-                  fontSize: '14px'
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{
-                display: 'block',
-                color: '#13343B',
-                fontWeight: 600,
-                marginBottom: '8px',
-                fontSize: '14px'
-              }}>
-                End Date
-              </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  border: '2px solid rgba(6, 182, 212, 0.2)',
-                  borderRadius: '10px',
-                  fontSize: '14px'
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{
-                display: 'block',
-                color: '#13343B',
-                fontWeight: 600,
-                marginBottom: '8px',
-                fontSize: '14px'
-              }}>
-                Number of Guests
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={guests}
-                onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  border: '2px solid rgba(6, 182, 212, 0.2)',
-                  borderRadius: '10px',
-                  fontSize: '14px'
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{
-                display: 'block',
-                color: '#13343B',
-                fontWeight: 600,
-                marginBottom: '8px',
-                fontSize: '14px'
-              }}>
-                Special Requests (Optional)
-              </label>
-              <textarea
-                value={specialRequests}
-                onChange={(e) => setSpecialRequests(e.target.value)}
-                rows={3}
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  border: '2px solid rgba(6, 182, 212, 0.2)',
-                  borderRadius: '10px',
-                  fontSize: '14px',
-                  fontFamily: 'inherit'
-                }}
-              />
-            </div>
-            
-            {startDate && endDate && (
-              <div style={{
-                background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
-                borderRadius: '12px',
-                padding: '20px',
-                marginBottom: '20px',
-                color: 'white'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '8px'
-                }}>
-                  <span>₹{property.price.toLocaleString()} × {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))} days</span>
-                  <span>₹{calculateTotalPrice().toLocaleString()}</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  fontWeight: 700,
-                  fontSize: '18px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.3)',
-                  paddingTop: '12px'
-                }}>
-                  <span>Total</span>
-                  <span>₹{calculateTotalPrice().toLocaleString()}</span>
-                </div>
-              </div>
-            )}
-            
-            <button
-              type="submit"
-              disabled={submitting}
-              style={{
-                width: '100%',
-                padding: '16px',
-                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                fontWeight: 700,
-                cursor: submitting ? 'not-allowed' : 'pointer',
-                boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
-                opacity: submitting ? 0.7 : 1
-              }}
-            >
-              {submitting ? 'Processing...' : 'Confirm Booking'}
-            </button>
-          </form>
         </div>
       </div>
     </div>

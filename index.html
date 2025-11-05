@@ -2,8 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rental Properties</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#06B6D4" />
+    <meta name="description" content="KAYALSTAY - Find your perfect rental property across India" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <title>KAYALSTAY - Find Your Perfect Stay</title>
+    <style>
+      /* Mobile-first responsive design */
+      @media (max-width: 768px) {
+        .max-w-7xl {
+          max-width: 100% !important;
+        }
+        .px-6 {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+        }
+        .py-8 {
+          padding-top: 1rem !important;
+          padding-bottom: 1rem !important;
+        }
+      }
+      
+      /* Ensure proper scrolling on mobile */
+      html, body {
+        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Prevent text selection on mobile */
+      * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      
+      /* Allow selection on input fields */
+      input, textarea, select {
+        -webkit-user-select: auto;
+        -moz-user-select: auto;
+        -ms-user-select: auto;
+        user-select: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

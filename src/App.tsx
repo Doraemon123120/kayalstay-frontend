@@ -1,0 +1,256 @@
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+import Listings from "./pages/Listings";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import PropertyForm from "./pages/PropertyForm";
+import PropertyDetail from "./pages/PropertyDetail";
+import Dashboard from "./pages/Dashboard";
+import { getToken } from "./services/api";
+import { useState, useEffect } from "react";
+
+export default function App() {
+  const isAuthed = !!getToken();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedKayalstay');
+    if (!hasVisited) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  const closeWelcome = () => {
+    localStorage.setItem('hasVisitedKayalstay', 'true');
+    setShowWelcome(false);
+  };
+  return (
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)' }}>
+      {/* Welcome Popup */}
+      {showWelcome && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000,
+          animation: 'fadeIn 0.4s ease'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '24px',
+            padding: '60px 50px',
+            maxWidth: '500px',
+            textAlign: 'center',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            position: 'relative',
+            animation: 'slideUp 0.5s ease'
+          }}>
+            <div style={{
+              fontSize: '72px',
+              marginBottom: '20px'
+            }}>🏠</div>
+            <h1 style={{
+              fontSize: '38px',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '10px',
+              letterSpacing: '1px'
+            }}>WELCOME TO</h1>
+            <h2 style={{
+              fontSize: '48px',
+              fontWeight: 900,
+              background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '20px',
+              letterSpacing: '2px'
+            }}>KAYALSTAY</h2>
+            <p style={{
+              fontSize: '16px',
+              color: '#626C71',
+              marginBottom: '30px',
+              lineHeight: '1.6'
+            }}>Your Perfect Stay, Just a Click Away</p>
+            <button
+              onClick={closeWelcome}
+              style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                color: 'white',
+                padding: '16px 48px',
+                borderRadius: '50px',
+                border: 'none',
+                fontSize: '16px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 8px 25px rgba(6, 182, 212, 0.4)',
+                transition: 'all 0.3s ease',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 35px rgba(6, 182, 212, 0.5)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(6, 182, 212, 0.4)';
+              }}
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+      )}
+
+      <nav style={{ 
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(6, 182, 212, 0.1)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
+      }}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link to="/" style={{
+            fontSize: '24px',
+            fontWeight: 700,
+            background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textDecoration: 'none'
+          }}>
+            KAYALSTAY
+            <span style={{
+              background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+              color: 'white',
+              borderRadius: '50px',
+              padding: '3px 10px',
+              fontSize: '10px',
+              fontWeight: 700,
+              marginLeft: '8px',
+              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+            }}>
+              NEW
+            </span>
+          </Link>
+          <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
+            <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>
+            {isAuthed ? (
+              <>
+                <Link
+                  to="/new"
+                  style={{
+                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                    color: 'white',
+                    padding: '10px 24px',
+                    borderRadius: '50px',
+                    textDecoration: 'none',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+                    transition: 'all 0.3s',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  ➕ Post a Property
+                </Link>
+                <Link to="/dashboard" style={{ color: '#13343B', textDecoration: 'none' }}>Dashboard</Link>
+                <button
+                  onClick={() => { localStorage.clear(); window.location.href = '/'; }}
+                  style={{
+                    background: 'transparent',
+                    color: '#13343B',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(6, 182, 212, 0.2)',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  style={{
+                    background: 'transparent',
+                    color: '#13343B',
+                    padding: '10px 24px',
+                    borderRadius: '8px',
+                    border: '2px solid rgba(6, 182, 212, 0.3)',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                    transition: 'all 0.3s',
+                    display: 'inline-block'
+                  }}
+                >Login</Link>
+                <Link to="/signup" style={{
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  color: 'white',
+                  padding: '10px 24px',
+                  borderRadius: '50px',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
+                  transition: 'all 0.3s'
+                }}>Sign Up</Link>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <Routes>
+          <Route path="/" element={<Navigate to="/listings" />} />
+          <Route path="/listings" element={<Listings />} />
+          <Route path="/listings/:id" element={<PropertyDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/new" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
+          <Route path="/edit/:id" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={isAuthed ? <Dashboard /> : <Navigate to="/login" />} />
+        </Routes>
+      </main>
+
+      {/* WhatsApp Float Button */}
+      <a
+        href="https://wa.me/1234567890"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          right: '30px',
+          background: 'linear-gradient(135deg, #25D366 0%, #1DA851 100%)',
+          color: 'white',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '32px',
+          boxShadow: '0 8px 25px rgba(37, 211, 102, 0.4)',
+          cursor: 'pointer',
+          zIndex: 1000,
+          transition: 'all 0.3s ease',
+          textDecoration: 'none'
+        }}
+      >
+        💬
+      </a>
+    </div>
+  );
+}

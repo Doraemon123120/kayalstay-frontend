@@ -7,12 +7,16 @@ export const api = axios.create({ baseURL });
 export function getToken() {
   const token = localStorage.getItem("token") || "";
   console.log("getToken called, token:", token);
+  console.log("All localStorage items:", {...localStorage});
   return token;
 }
 
 export function setAuth(token: string, user: any) {
+  console.log("setAuth called with token:", token);
+  console.log("setAuth called with user:", user);
   localStorage.setItem("token", token);
   localStorage.setItem("user", JSON.stringify(user));
+  console.log("Token stored in localStorage:", localStorage.getItem("token"));
 }
 
 export function getUser() {
@@ -24,7 +28,12 @@ api.interceptors.request.use((config) => {
   const token = getToken();
   console.log("Interceptor - token:", token);
   console.log("Interceptor - config:", config);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+    console.log("Authorization header set:", config.headers.Authorization);
+  } else {
+    console.log("No token available, not setting Authorization header");
+  }
   return config;
 });
 

@@ -16,10 +16,21 @@ export default function ForgotPassword() {
     setError("");
     
     try {
-      await api.post("/auth/forgot-password", { email });
+      const response = await api.post("/auth/forgot-password", { email });
+      console.log("Forgot password response:", response);
       setMessage("Password reset instructions have been sent to your email.");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to send reset instructions");
+      console.error("Forgot password error:", err);
+      if (err.response) {
+        // Server responded with error status
+        setError(err.response.data?.error || "Failed to send reset instructions");
+      } else if (err.request) {
+        // Request was made but no response received
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        // Something else happened
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

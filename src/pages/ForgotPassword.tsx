@@ -1,22 +1,27 @@
 import { useState } from "react";
-import { api, setAuth } from "../services/api";
+import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function ForgotPassword() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
     setError("");
+    
     try {
-      const res = await api.post("/auth/login", { email, password });
-      setAuth(res.data.token, res.data.user);
-      nav("/dashboard");
+      await api.post("/auth/forgot-password", { email });
+      setMessage("Password reset instructions have been sent to your email.");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Login failed");
+      setError(err.response?.data?.error || "Failed to send reset instructions");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,12 +40,12 @@ export default function Login() {
         fontWeight: 700,
         color: '#13343B',
         marginBottom: '10px'
-      }}>Welcome Back</h1>
+      }}>Forgot Password</h1>
       <p style={{
         color: '#626C71',
         marginBottom: '30px',
         fontSize: '14px'
-      }}>Login to your KAYALSTAY account</p>
+      }}>Enter your email to receive password reset instructions</p>
       
       {error && <div style={{
         background: 'rgba(239, 68, 68, 0.1)',
@@ -51,6 +56,16 @@ export default function Login() {
         fontSize: '14px',
         fontWeight: 500
       }}>{error}</div>}
+      
+      {message && <div style={{
+        background: 'rgba(16, 185, 129, 0.1)',
+        color: '#047857',
+        padding: '12px 16px',
+        borderRadius: '8px',
+        marginBottom: '20px',
+        fontSize: '14px',
+        fontWeight: 500
+      }}>{message}</div>}
       
       <div style={{ marginBottom: '20px' }}>
         <label style={{
@@ -79,63 +94,26 @@ export default function Login() {
         />
       </div>
       
-      <div style={{ marginBottom: '24px' }}>
-        <label style={{
-          display: 'block',
-          color: '#13343B',
+      <button 
+        type="submit" 
+        disabled={loading}
+        style={{
+          width: '100%',
+          padding: '14px',
+          background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '10px',
+          fontSize: '16px',
           fontWeight: 600,
-          marginBottom: '8px',
-          fontSize: '14px'
-        }}>Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{
-            width: '100%',
-            padding: '14px 16px',
-            border: '2px solid rgba(6, 182, 212, 0.2)',
-            borderRadius: '10px',
-            fontSize: '15px',
-            color: '#13343B',
-            outline: 'none',
-            transition: 'all 0.3s'
-          }}
-        />
-      </div>
-      
-      <button type="submit" style={{
-        width: '100%',
-        padding: '14px',
-        background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-        color: 'white',
-        border: 'none',
-        borderRadius: '10px',
-        fontSize: '16px',
-        fontWeight: 600,
-        cursor: 'pointer',
-        boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
-        transition: 'all 0.3s'
-      }}>Login to Account</button>
-      
-      <div style={{
-        textAlign: 'center',
-        marginTop: '16px'
-      }}>
-        <a 
-          href="/forgot-password" 
-          style={{
-            color: '#06B6D4',
-            fontWeight: 600,
-            textDecoration: 'none',
-            fontSize: '14px'
-          }}
-        >
-          Forgot Password?
-        </a>
-      </div>
+          cursor: loading ? 'not-allowed' : 'pointer',
+          boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
+          transition: 'all 0.3s',
+          opacity: loading ? 0.7 : 1
+        }}
+      >
+        {loading ? 'Sending...' : 'Send Reset Instructions'}
+      </button>
       
       <p style={{
         textAlign: 'center',
@@ -143,12 +121,18 @@ export default function Login() {
         color: '#626C71',
         fontSize: '14px'
       }}>
-        Don't have an account?{' '}
-        <a href="/signup" style={{
-          color: '#06B6D4',
-          fontWeight: 600,
-          textDecoration: 'none'
-        }}>Sign up</a>
+        Remember your password?{' '}
+        <a 
+          onClick={() => nav("/login")} 
+          style={{
+            color: '#06B6D4',
+            fontWeight: 600,
+            textDecoration: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          Back to Login
+        </a>
       </p>
     </form>
   );

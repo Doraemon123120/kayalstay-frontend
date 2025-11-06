@@ -9,6 +9,8 @@ import Favorites from "./pages/Favorites";
 import Booking from "./pages/Booking";
 import MyBookings from "./pages/MyBookings";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { getToken } from "./services/api";
 import { useState, useEffect } from "react";
 
@@ -233,6 +235,8 @@ export default function App() {
           <Route path="/profile" element={isAuthed ? <Profile /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/new" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
           <Route path="/edit/:id" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
           <Route path="/dashboard" element={isAuthed ? <Dashboard /> : <Navigate to="/login" />} />

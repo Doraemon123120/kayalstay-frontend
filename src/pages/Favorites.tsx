@@ -18,10 +18,20 @@ export default function Favorites() {
   const loadFavorites = async () => {
     try {
       setLoading(true);
+      console.log("Loading favorites...");
       const res = await getFavorites();
+      console.log("Favorites loaded:", res.data);
       setFavorites(res.data.favorites);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to load favorites", err);
+      console.error("Error response:", err.response);
+      // Check if it's an auth error
+      if (err.response?.status === 401) {
+        console.log("Authentication error - token may be invalid or expired");
+        // Clear local storage and redirect to login
+        localStorage.clear();
+        window.location.href = '/login';
+      }
     } finally {
       setLoading(false);
     }

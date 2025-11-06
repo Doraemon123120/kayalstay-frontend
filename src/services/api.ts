@@ -21,6 +21,7 @@ export function setAuth(token: string, user: any) {
 
 export function getUser() {
   const raw = localStorage.getItem("user");
+  console.log("getUser raw data:", raw);
   return raw ? JSON.parse(raw) : null;
 }
 
@@ -35,17 +36,26 @@ api.interceptors.request.use((config) => {
     console.log("No token available, not setting Authorization header");
   }
   return config;
+}, (error) => {
+  console.error("Interceptor error:", error);
+  return Promise.reject(error);
 });
 
 // Favorite functions
-export const addFavorite = (propertyId: string) => 
-  api.post(`/auth/favorites/${propertyId}`);
+export const addFavorite = (propertyId: string) => {
+  console.log("Adding favorite:", propertyId);
+  return api.post(`/auth/favorites/${propertyId}`);
+}
 
-export const removeFavorite = (propertyId: string) => 
-  api.delete(`/auth/favorites/${propertyId}`);
+export const removeFavorite = (propertyId: string) => {
+  console.log("Removing favorite:", propertyId);
+  return api.delete(`/auth/favorites/${propertyId}`);
+}
 
-export const getFavorites = () => 
-  api.get(`/auth/favorites`);
+export const getFavorites = () => {
+  console.log("Getting favorites");
+  return api.get(`/auth/favorites`);
+}
 
 // Profile functions
 export const getProfile = () => 

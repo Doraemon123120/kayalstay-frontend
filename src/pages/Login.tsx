@@ -12,11 +12,16 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
+      console.log("Attempting login with email:", email);
       const res = await api.post("/auth/login", { email, password });
+      console.log("Login response:", res.data);
       setAuth(res.data.token, res.data.user);
       nav("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Login failed");
+      console.error("Login error:", err);
+      const errorMessage = err.response?.data?.error || err.message || "Login failed";
+      console.log("Login error message:", errorMessage);
+      setError(errorMessage);
     }
   };
 

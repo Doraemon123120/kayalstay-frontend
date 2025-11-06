@@ -14,11 +14,16 @@ export default function Signup() {
     e.preventDefault();
     setError("");
     try {
+      console.log("Attempting signup with data:", { name, email, password, phone });
       const res = await api.post("/auth/signup", { name, email, password, phone });
+      console.log("Signup response:", res.data);
       setAuth(res.data.token, res.data.user);
       nav("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Signup failed");
+      console.error("Signup error:", err);
+      const errorMessage = err.response?.data?.error || err.message || "Signup failed";
+      console.log("Signup error message:", errorMessage);
+      setError(errorMessage);
     }
   };
 

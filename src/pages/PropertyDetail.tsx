@@ -93,6 +93,7 @@ export default function PropertyDetail() {
                 <img
                   src={prop.images[selectedImage]?.url}
                   alt={prop.title}
+                  loading="lazy"
                   style={{
                     width: '100%',
                     height: '500px',
@@ -139,6 +140,7 @@ export default function PropertyDetail() {
                     <img
                       src={img.url}
                       alt={`Image ${i + 1}`}
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '80px',

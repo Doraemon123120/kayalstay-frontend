@@ -413,6 +413,7 @@ export default function Listings() {
                       <img
                         src={p.images[0].url}
                         alt={p.title}
+                        loading="lazy"
                         style={{
                           height: '200px',
                           width: '100%',

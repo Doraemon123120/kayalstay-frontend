@@ -15,14 +15,35 @@ import { getToken } from "./services/api";
 import { useState, useEffect } from "react";
 
 export default function App() {
-  const isAuthed = !!getToken();
+  const [isAuthed, setIsAuthed] = useState(!!getToken());
   const [showWelcome, setShowWelcome] = useState(false);
 
+  // Listen for authentication changes
   useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuthed(!!getToken());
+    };
+
+    // Check initial state
+    handleStorageChange();
+
+    // Listen for storage changes (login/logout)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check on focus to catch changes from other tabs
+    window.addEventListener('focus', handleStorageChange);
+
+    // Check if this is the first visit
     const hasVisited = localStorage.getItem('hasVisitedKayalstay');
     if (!hasVisited) {
       setShowWelcome(true);
     }
+
+    // Cleanup listeners
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleStorageChange);
+    };
   }, []);
 
   const closeWelcome = () => {
@@ -177,7 +198,11 @@ export default function App() {
                 </div>
                 <Link to="/dashboard" style={{ color: '#13343B', textDecoration: 'none' }}>Dashboard</Link>
                 <button
-                  onClick={() => { localStorage.clear(); window.location.href = '/'; }}
+                  onClick={() => { 
+                    localStorage.clear(); 
+                    setIsAuthed(false);
+                    window.location.href = '/'; 
+                  }}
                   style={{
                     background: 'transparent',
                     color: '#13343B',

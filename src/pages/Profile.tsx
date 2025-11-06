@@ -543,7 +543,7 @@ export default function Profile() {
                 border: 'none',
                 borderRadius: '12px',
                 fontSize: '16px',
-                fontWeight: 700',
+                fontWeight: 700,
                 cursor: updating ? 'not-allowed' : 'pointer',
                 boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
                 opacity: updating ? 0.7 : 1

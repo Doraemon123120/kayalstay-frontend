@@ -235,7 +235,7 @@ export default function PaymentForm({
           </label>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '12px'
           }}>
             <button
@@ -276,6 +276,24 @@ export default function PaymentForm({
             </button>
             <button
               type="button"
+              onClick={() => setPaymentMethod("phonepe")}
+              style={{
+                padding: '12px',
+                background: paymentMethod === "phonepe" 
+                  ? 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)' 
+                  : 'rgba(6, 182, 212, 0.1)',
+                color: paymentMethod === "phonepe" ? 'white' : '#06B6D4',
+                borderRadius: '10px',
+                border: '1px solid rgba(6, 182, 212, 0.2)',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              PhonePe
+            </button>
+            <button
+              type="button"
               onClick={() => setPaymentMethod("upi")}
               style={{
                 padding: '12px',
@@ -290,12 +308,12 @@ export default function PaymentForm({
                 cursor: 'pointer'
               }}
             >
-              UPI
+              Other UPI
             </button>
           </div>
         </div>
         
-        {paymentMethod === "upi" ? (
+        {paymentMethod === "phonepe" || paymentMethod === "upi" ? (
           <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
@@ -304,13 +322,13 @@ export default function PaymentForm({
               marginBottom: '8px',
               fontSize: '14px'
             }}>
-              UPI ID
+              {paymentMethod === "phonepe" ? "PhonePe Number" : "UPI ID"}
             </label>
             <input
               type="text"
               value={upiId}
               onChange={(e) => setUpiId(e.target.value)}
-              placeholder="yourname@upi"
+              placeholder={paymentMethod === "phonepe" ? "Mobile number or UPI ID" : "yourname@upi"}
               required
               style={{
                 width: '100%',

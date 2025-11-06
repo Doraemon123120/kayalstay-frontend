@@ -5,7 +5,9 @@ const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 export const api = axios.create({ baseURL });
 
 export function getToken() {
-  return localStorage.getItem("token") || "";
+  const token = localStorage.getItem("token") || "";
+  console.log("getToken called, token:", token);
+  return token;
 }
 
 export function setAuth(token: string, user: any) {
@@ -20,6 +22,8 @@ export function getUser() {
 
 api.interceptors.request.use((config) => {
   const token = getToken();
+  console.log("Interceptor - token:", token);
+  console.log("Interceptor - config:", config);
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });

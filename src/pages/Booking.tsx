@@ -136,7 +136,7 @@ export default function Booking() {
             borderRadius: '50px',
             border: 'none',
             fontSize: '16px',
-            fontWeight: 700',
+            fontWeight: 700,
             cursor: 'pointer',
             boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
           }}
@@ -421,7 +421,7 @@ export default function Booking() {
                     borderRadius: '12px',
                     fontSize: '16px',
                     fontWeight: 700,
-                    cursor: submitting ? 'not-allowed' : 'pointer',
+                    cursor: 'pointer',
                     boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
                     opacity: submitting ? 0.7 : 1
                   }}

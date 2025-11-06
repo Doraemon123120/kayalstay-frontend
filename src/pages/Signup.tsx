@@ -18,6 +18,11 @@ export default function Signup() {
       const res = await api.post("/auth/signup", { name, email, password, phone });
       console.log("Signup response:", res.data);
       setAuth(res.data.token, res.data.user);
+      // Manually trigger auth state update in App component
+      const updateAuthState = (window as any).updateAuthState;
+      if (updateAuthState) {
+        updateAuthState();
+      }
       nav("/dashboard");
     } catch (err: any) {
       console.error("Signup error:", err);

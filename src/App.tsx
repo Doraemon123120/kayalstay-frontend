@@ -21,7 +21,9 @@ export default function App() {
   // Listen for authentication changes
   useEffect(() => {
     const handleStorageChange = () => {
-      setIsAuthed(!!getToken());
+      const token = getToken();
+      console.log("Storage change detected, token:", token);
+      setIsAuthed(!!token);
     };
 
     // Check initial state
@@ -50,6 +52,20 @@ export default function App() {
     localStorage.setItem('hasVisitedKayalstay', 'true');
     setShowWelcome(false);
   };
+
+  // Function to manually update authentication state
+  const updateAuthState = () => {
+    console.log("Manually updating auth state");
+    const token = getToken();
+    console.log("Current token:", token);
+    setIsAuthed(!!token);
+  };
+
+  // Expose the function globally for debugging
+  useEffect(() => {
+    (window as any).updateAuthState = updateAuthState;
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)' }}>
       {/* Welcome Popup */}
@@ -201,6 +217,7 @@ export default function App() {
                   onClick={() => { 
                     localStorage.clear(); 
                     setIsAuthed(false);
+                    console.log("User logged out, auth state updated to false");
                     window.location.href = '/'; 
                   }}
                   style={{

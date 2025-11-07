@@ -13,8 +13,13 @@ export default function Login() {
     setError("");
     try {
       console.log("Attempting login with email:", email);
+      console.log("Password length:", password.length);
+      
       const res = await api.post("/auth/login", { email, password });
-      console.log("Login response:", res.data);
+      console.log("Login response received:", res.data);
+      console.log("Token in response:", res.data.token);
+      console.log("Token length:", res.data.token ? res.data.token.length : 0);
+      
       setAuth(res.data.token, res.data.user);
       
       // Dispatch custom event to notify App component of auth change
@@ -26,11 +31,27 @@ export default function Login() {
         updateAuthState();
       }
       
-      // Navigate to dashboard
+      console.log("Navigation to dashboard");
       nav("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);
-      const errorMessage = err.response?.data?.error || err.message || "Login failed";
+      console.error("Error response:", err.response);
+      console.error("Error request:", err.request);
+      
+      let errorMessage = "Login failed";
+      if (err.response) {
+        // Server responded with error status
+        errorMessage = err.response.data?.error || err.response.statusText || "Server error";
+        console.log("Server error response:", err.response.data);
+      } else if (err.request) {
+        // Request was made but no response received
+        errorMessage = "Network error - unable to reach server";
+        console.log("Network error:", err.request);
+      } else {
+        // Something else happened
+        errorMessage = err.message || "Unknown error";
+      }
+      
       console.log("Login error message:", errorMessage);
       setError(errorMessage);
     }

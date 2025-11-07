@@ -70,6 +70,30 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Add response interceptor for detailed error logging
+api.interceptors.response.use(
+  (response) => {
+    console.log("Response received:", response);
+    return response;
+  },
+  (error) => {
+    console.error("=== Axios Response Error ===");
+    console.error("Error:", error);
+    
+    if (error.response) {
+      console.error("Error response data:", error.response.data);
+      console.error("Error response status:", error.response.status);
+      console.error("Error response headers:", error.response.headers);
+    } else if (error.request) {
+      console.error("Error request:", error.request);
+    } else {
+      console.error("Error message:", error.message);
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Favorite functions
 export const addFavorite = (propertyId: string) => {
   console.log("Adding favorite:", propertyId);

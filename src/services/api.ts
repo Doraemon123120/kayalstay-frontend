@@ -5,18 +5,41 @@ const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 export const api = axios.create({ baseURL });
 
 export function getToken() {
-  const token = localStorage.getItem("token") || "";
-  console.log("getToken called, token:", token);
-  console.log("All localStorage items:", {...localStorage});
-  return token;
+  try {
+    const token = localStorage.getItem("token") || "";
+    console.log("=== getToken function called ===");
+    console.log("Token retrieved from localStorage:", token);
+    console.log("Token type:", typeof token);
+    console.log("Token length:", token ? token.length : 0);
+    console.log("All localStorage items:", {...localStorage});
+    return token;
+  } catch (error) {
+    console.error("ERROR: Failed to retrieve token from localStorage:", error);
+    return "";
+  }
 }
 
 export function setAuth(token: string, user: any) {
-  console.log("setAuth called with token:", token);
-  console.log("setAuth called with user:", user);
-  localStorage.setItem("token", token);
-  localStorage.setItem("user", JSON.stringify(user));
-  console.log("Token stored in localStorage:", localStorage.getItem("token"));
+  console.log("=== setAuth function called ===");
+  console.log("Token received:", token);
+  console.log("User received:", user);
+  console.log("Token type:", typeof token);
+  console.log("Token length:", token ? token.length : 0);
+  
+  if (!token) {
+    console.error("ERROR: No token provided to setAuth");
+    return;
+  }
+  
+  try {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    console.log("=== Token successfully stored in localStorage ===");
+    console.log("Stored token:", localStorage.getItem("token"));
+    console.log("Stored user:", localStorage.getItem("user"));
+  } catch (error) {
+    console.error("ERROR: Failed to store token in localStorage:", error);
+  }
 }
 
 export function getUser() {
@@ -26,15 +49,21 @@ export function getUser() {
 }
 
 api.interceptors.request.use((config) => {
+  console.log("=== Axios Interceptor ===");
+  console.log("Config:", config);
+  
   const token = getToken();
-  console.log("Interceptor - token:", token);
-  console.log("Interceptor - config:", config);
+  console.log("Token from getToken():", token);
+  console.log("Token length:", token ? token.length : 0);
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
     console.log("Authorization header set:", config.headers.Authorization);
   } else {
     console.log("No token available, not setting Authorization header");
   }
+  
+  console.log("Final config:", config);
   return config;
 }, (error) => {
   console.error("Interceptor error:", error);

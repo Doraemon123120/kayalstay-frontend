@@ -23,6 +23,7 @@ export default function App() {
     const handleStorageChange = () => {
       const token = getToken();
       console.log("Storage change detected, token:", token);
+      console.log("Token length:", token ? token.length : 0);
       setIsAuthed(!!token);
     };
 
@@ -53,6 +54,7 @@ export default function App() {
     const handleAuthChange = () => {
       const token = getToken();
       console.log("Auth change detected, token:", token);
+      console.log("Token length:", token ? token.length : 0);
       setIsAuthed(!!token);
     };
 
@@ -74,6 +76,7 @@ export default function App() {
     console.log("Manually updating auth state");
     const token = getToken();
     console.log("Current token:", token);
+    console.log("Token length:", token ? token.length : 0);
     setIsAuthed(!!token);
   };
 

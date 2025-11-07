@@ -19,8 +19,22 @@ export default function Login() {
       console.log("Login response received:", res.data);
       console.log("Token in response:", res.data.token);
       console.log("Token length:", res.data.token ? res.data.token.length : 0);
+      console.log("User in response:", res.data.user);
       
+      // Check if we received a valid token
+      if (!res.data.token) {
+        console.error("ERROR: No token received from backend");
+        setError("Login failed - No authentication token received");
+        return;
+      }
+      
+      console.log("Calling setAuth with token and user");
       setAuth(res.data.token, res.data.user);
+      
+      // Verify token was stored
+      const storedToken = localStorage.getItem("token");
+      console.log("Token in localStorage after setAuth:", storedToken);
+      console.log("Token length in localStorage:", storedToken ? storedToken.length : 0);
       
       // Dispatch custom event to notify App component of auth change
       window.dispatchEvent(new Event('authChange'));
@@ -28,6 +42,7 @@ export default function Login() {
       // Also manually trigger auth state update in App component
       const updateAuthState = (window as any).updateAuthState;
       if (updateAuthState) {
+        console.log("Calling updateAuthState");
         updateAuthState();
       }
       

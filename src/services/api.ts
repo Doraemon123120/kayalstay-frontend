@@ -32,11 +32,26 @@ export function setAuth(token: string, user: any) {
   }
   
   try {
+    // Store token
     localStorage.setItem("token", token);
+    console.log("Token stored in localStorage");
+    
+    // Store user
     localStorage.setItem("user", JSON.stringify(user));
-    console.log("=== Token successfully stored in localStorage ===");
-    console.log("Stored token:", localStorage.getItem("token"));
-    console.log("Stored user:", localStorage.getItem("user"));
+    console.log("User stored in localStorage");
+    
+    // Verify storage
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    
+    console.log("=== Verification ===");
+    console.log("Stored token:", storedToken);
+    console.log("Stored token length:", storedToken ? storedToken.length : 0);
+    console.log("Stored user:", storedUser);
+    
+    if (storedToken !== token) {
+      console.error("ERROR: Token mismatch after storage!");
+    }
   } catch (error) {
     console.error("ERROR: Failed to store token in localStorage:", error);
   }

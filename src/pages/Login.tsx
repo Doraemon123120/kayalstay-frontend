@@ -16,11 +16,17 @@ export default function Login() {
       const res = await api.post("/auth/login", { email, password });
       console.log("Login response:", res.data);
       setAuth(res.data.token, res.data.user);
-      // Manually trigger auth state update in App component
+      
+      // Dispatch custom event to notify App component of auth change
+      window.dispatchEvent(new Event('authChange'));
+      
+      // Also manually trigger auth state update in App component
       const updateAuthState = (window as any).updateAuthState;
       if (updateAuthState) {
         updateAuthState();
       }
+      
+      // Navigate to dashboard
       nav("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);

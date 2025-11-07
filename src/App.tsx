@@ -48,6 +48,22 @@ export default function App() {
     };
   }, []);
 
+  // Custom event for authentication changes
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const token = getToken();
+      console.log("Auth change detected, token:", token);
+      setIsAuthed(!!token);
+    };
+
+    // Listen for custom auth change events
+    window.addEventListener('authChange', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('authChange', handleAuthChange);
+    };
+  }, []);
+
   const closeWelcome = () => {
     localStorage.setItem('hasVisitedKayalstay', 'true');
     setShowWelcome(false);

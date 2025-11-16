@@ -7,123 +7,68 @@ export const api = axios.create({ baseURL });
 export function getToken() {
   try {
     const token = localStorage.getItem("token") || "";
-    console.log("=== getToken function called ===");
-    console.log("Token retrieved from localStorage:", token);
-    console.log("Token type:", typeof token);
-    console.log("Token length:", token ? token.length : 0);
-    console.log("All localStorage items:", {...localStorage});
     return token;
   } catch (error) {
-    console.error("ERROR: Failed to retrieve token from localStorage:", error);
+    console.error("Failed to retrieve token:", error);
     return "";
   }
 }
 
 export function setAuth(token: string, user: any) {
-  console.log("=== setAuth function called ===");
-  console.log("Token received:", token);
-  console.log("User received:", user);
-  console.log("Token type:", typeof token);
-  console.log("Token length:", token ? token.length : 0);
-  
   if (!token) {
-    console.error("ERROR: No token provided to setAuth");
+    console.error("No token provided to setAuth");
     return;
   }
   
   try {
-    // Store token
     localStorage.setItem("token", token);
-    console.log("Token stored in localStorage");
-    
-    // Store user
     localStorage.setItem("user", JSON.stringify(user));
-    console.log("User stored in localStorage");
-    
-    // Verify storage
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    
-    console.log("=== Verification ===");
-    console.log("Stored token:", storedToken);
-    console.log("Stored token length:", storedToken ? storedToken.length : 0);
-    console.log("Stored user:", storedUser);
-    
-    if (storedToken !== token) {
-      console.error("ERROR: Token mismatch after storage!");
-    }
   } catch (error) {
-    console.error("ERROR: Failed to store token in localStorage:", error);
+    console.error("Failed to store authentication:", error);
   }
 }
 
 export function getUser() {
   const raw = localStorage.getItem("user");
-  console.log("getUser raw data:", raw);
   return raw ? JSON.parse(raw) : null;
 }
 
 api.interceptors.request.use((config) => {
-  console.log("=== Axios Interceptor ===");
-  console.log("Config:", config);
-  
   const token = getToken();
-  console.log("Token from getToken():", token);
-  console.log("Token length:", token ? token.length : 0);
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("Authorization header set:", config.headers.Authorization);
-  } else {
-    console.log("No token available, not setting Authorization header");
   }
   
-  console.log("Final config:", config);
   return config;
 }, (error) => {
-  console.error("Interceptor error:", error);
+  console.error("Request interceptor error:", error);
   return Promise.reject(error);
 });
 
-// Add response interceptor for detailed error logging
+// Add response interceptor for error handling
 api.interceptors.response.use(
-  (response) => {
-    console.log("Response received:", response);
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.error("=== Axios Response Error ===");
-    console.error("Error:", error);
-    
-    if (error.response) {
-      console.error("Error response data:", error.response.data);
-      console.error("Error response status:", error.response.status);
-      console.error("Error response headers:", error.response.headers);
-    } else if (error.request) {
-      console.error("Error request:", error.request);
-    } else {
-      console.error("Error message:", error.message);
+    if (error.response?.status === 401) {
+      console.error("Unauthorized - Please login again");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
-    
     return Promise.reject(error);
   }
 );
 
 // Favorite functions
-export const addFavorite = (propertyId: string) => {
-  console.log("Adding favorite:", propertyId);
-  return api.post(`/auth/favorites/${propertyId}`);
-}
+export const addFavorite = (propertyId: string) => 
+  api.post(`/auth/favorites/${propertyId}`);
 
-export const removeFavorite = (propertyId: string) => {
-  console.log("Removing favorite:", propertyId);
-  return api.delete(`/auth/favorites/${propertyId}`);
-}
+export const removeFavorite = (propertyId: string) => 
+  api.delete(`/auth/favorites/${propertyId}`);
 
-export const getFavorites = () => {
-  console.log("Getting favorites");
-  return api.get(`/auth/favorites`);
-}
+export const getFavorites = () => 
+  api.get(`/auth/favorites`);
 
 // Profile functions
 export const getProfile = () => 

@@ -27,6 +27,7 @@ import { useState, useEffect } from "react";
 export default function App() {
   const [isAuthed, setIsAuthed] = useState(!!getToken());
   const [showWelcome, setShowWelcome] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Listen for authentication changes
   useEffect(() => {
@@ -117,7 +118,8 @@ export default function App() {
             background: 'white',
             borderRadius: '24px',
             padding: '60px 50px',
-            maxWidth: '500px',
+            maxWidth: '90%',
+            width: '500px',
             textAlign: 'center',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
             position: 'relative',
@@ -192,9 +194,12 @@ export default function App() {
         background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(6, 182, 212, 0.1)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
       }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           <Link to="/" style={{
             display: 'flex',
             alignItems: 'center',
@@ -203,16 +208,35 @@ export default function App() {
             <img 
               src="/logo192.png" 
               alt="Quickit Logo" 
+              className="nav-logo"
               style={{
-                width: '100px',
-                height: '100px',
+                width: '70px',
+                height: '70px',
                 transition: 'transform 0.3s ease'
               }}
               onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
               onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
             />
           </Link>
-          <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="mobile-menu-btn"
+            style={{
+              display: 'none',
+              background: 'transparent',
+              border: 'none',
+              fontSize: '28px',
+              cursor: 'pointer',
+              color: '#13343B',
+              padding: '8px'
+            }}
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+          {/* Desktop Navigation */}
+          <div className="desktop-nav flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>
             <Link to="/tiffin-centers" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Tiffin Centers</Link>
             <Link to="/accessories" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Accessories</Link>
@@ -293,9 +317,65 @@ export default function App() {
                   boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
                   transition: 'all 0.3s'
                 }}>Sign Up</Link>
-              </>
+              </>  
             )}
           </div>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <div className="mobile-nav" style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              background: 'white',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+              padding: '20px',
+              display: 'none',
+              flexDirection: 'column',
+              gap: '16px',
+              animation: 'slideDown 0.3s ease'
+            }}>
+              <Link to="/listings" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Browse Properties</Link>
+              <Link to="/tiffin-centers" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Tiffin Centers</Link>
+              <Link to="/accessories" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Accessories</Link>
+              {isAuthed ? (
+                <>
+                  <Link to="/favorites" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Favorites</Link>
+                  <Link to="/my-bookings" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>My Bookings</Link>
+                  <Link to="/cart" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>🛒 Cart</Link>
+                  <Link to="/new" onClick={() => setMobileMenuOpen(false)} style={{ color: '#8B5CF6', textDecoration: 'none', padding: '12px', fontWeight: 600, borderBottom: '1px solid #f0f0f0' }}>➕ Post a Property</Link>
+                  <Link to="/profile" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Profile</Link>
+                  <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', borderBottom: '1px solid #f0f0f0' }}>Dashboard</Link>
+                  <button
+                    onClick={() => { 
+                      localStorage.clear(); 
+                      setIsAuthed(false);
+                      setMobileMenuOpen(false);
+                      window.location.href = '/'; 
+                    }}
+                    style={{
+                      background: '#f5f5f5',
+                      color: '#13343B',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      marginTop: '8px'
+                    }}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ color: '#13343B', textDecoration: 'none', padding: '12px', border: '2px solid rgba(6, 182, 212, 0.3)', borderRadius: '8px', textAlign: 'center', fontWeight: 600 }}>Login</Link>
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)} style={{ background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)', color: 'white', padding: '12px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, textAlign: 'center' }}>Sign Up</Link>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </nav>
 

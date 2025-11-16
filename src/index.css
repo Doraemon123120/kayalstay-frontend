@@ -210,3 +210,77 @@ input:-moz-placeholder { color: #A7A9A9 !important; }
     transform: translateY(0);
   }
 }
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+  display: flex;
+}
+
+.mobile-menu-btn {
+  display: none;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  
+  .mobile-nav {
+    display: flex !important;
+  }
+  
+  .nav-logo {
+    width: 60px !important;
+    height: 60px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Welcome popup mobile */
+  .welcome-popup {
+    padding: 40px 30px !important;
+    max-width: 85% !important;
+  }
+  
+  .welcome-popup h1 {
+    font-size: 28px !important;
+  }
+  
+  .welcome-popup h2 {
+    font-size: 36px !important;
+  }
+  
+  .welcome-popup img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}

@@ -130,34 +130,25 @@ export default function App() {
             position: 'relative',
             animation: 'slideUp 0.5s ease'
           }}>
-            <img 
-              src="/logo192.png" 
-              alt="Quickit Logo" 
-              style={{
-                width: '120px',
-                height: '120px',
-                marginBottom: '20px',
-                animation: 'pulse 2s ease-in-out infinite'
-              }} 
-            />
             <h1 style={{
               fontSize: '38px',
               fontWeight: 800,
               background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              marginBottom: '10px',
+              marginBottom: '30px',
               letterSpacing: '1px'
             }}>WELCOME TO</h1>
-            <h2 style={{
-              fontSize: '48px',
-              fontWeight: 900,
-              background: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '20px',
-              letterSpacing: '2px'
-            }}>Quickit</h2>
+            <img 
+              src="/logo192.png" 
+              alt="Quickit Logo" 
+              style={{
+                width: '150px',
+                height: '150px',
+                marginBottom: '30px',
+                animation: 'pulse 2s ease-in-out infinite'
+              }} 
+            />
             <p style={{
               fontSize: '16px',
               color: '#626C71',

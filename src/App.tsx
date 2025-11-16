@@ -16,6 +16,7 @@ import TiffinCenterForm from "./pages/TiffinCenterForm";
 import TiffinCenterDetail from "./pages/TiffinCenterDetail";
 import Accessories from "./pages/Accessories";
 import AccessoryDetail from "./pages/AccessoryDetail";
+import AccessoryForm from "./pages/AccessoryForm";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
@@ -320,6 +321,8 @@ export default function App() {
           <Route path="/dashboard" element={isAuthed ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/accessories" element={<Accessories />} />
           <Route path="/accessories/:id" element={<AccessoryDetail />} />
+          <Route path="/new-accessory" element={isAuthed ? <AccessoryForm /> : <Navigate to="/login" />} />
+          <Route path="/edit-accessory/:id" element={isAuthed ? <AccessoryForm /> : <Navigate to="/login" />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />

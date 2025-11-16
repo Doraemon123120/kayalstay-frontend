@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAccessories } from "../services/api";
+import { getToken } from "../services/api";
 
 interface Accessory {
   _id: string;
@@ -19,12 +20,14 @@ interface Accessory {
 }
 
 export default function Accessories() {
+  const navigate = useNavigate();
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const isAuthenticated = !!getToken();
 
   useEffect(() => {
     loadAccessories();
@@ -99,6 +102,35 @@ export default function Accessories() {
           opacity: 0.95,
           fontWeight: 500
         }}>Find the perfect accessories for your home or office</p>
+        
+        {isAuthenticated && (
+          <button
+            onClick={() => navigate('/new-accessory')}
+            style={{
+              marginTop: '20px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              color: 'white',
+              padding: '12px 32px',
+              borderRadius: '50px',
+              border: '2px solid rgba(255, 255, 255, 0.4)',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            ➕ Add Accessory
+          </button>
+        )}
       </div>
 
       {/* Filters */}

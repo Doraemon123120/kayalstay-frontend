@@ -122,10 +122,16 @@ export default function App() {
             position: 'relative',
             animation: 'slideUp 0.5s ease'
           }}>
-            <div style={{
-              fontSize: '72px',
-              marginBottom: '20px'
-            }}>🏠</div>
+            <img 
+              src="/logo192.png" 
+              alt="Quickit Logo" 
+              style={{
+                width: '120px',
+                height: '120px',
+                marginBottom: '20px',
+                animation: 'pulse 2s ease-in-out infinite'
+              }} 
+            />
             <h1 style={{
               fontSize: '38px',
               fontWeight: 800,
@@ -189,26 +195,40 @@ export default function App() {
       }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" style={{
-            fontSize: '24px',
-            fontWeight: 700,
-            background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
             textDecoration: 'none'
           }}>
-            Quickit
-            <span style={{
-              background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-              color: 'white',
-              borderRadius: '50px',
-              padding: '3px 10px',
-              fontSize: '10px',
+            <img 
+              src="/logo192.png" 
+              alt="Quickit Logo" 
+              style={{
+                width: '40px',
+                height: '40px'
+              }} 
+            />
+            <div style={{
+              fontSize: '24px',
               fontWeight: 700,
-              marginLeft: '8px',
-              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+              background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
             }}>
-              NEW
-            </span>
+              Quickit
+              <span style={{
+                background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                color: 'white',
+                borderRadius: '50px',
+                padding: '3px 10px',
+                fontSize: '10px',
+                fontWeight: 700,
+                marginLeft: '8px',
+                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+              }}>
+                NEW
+              </span>
+            </div>
           </Link>
           <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>

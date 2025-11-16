@@ -155,6 +155,12 @@ export const deleteReview = (id: string) =>
 export const createPaymentIntent = (paymentData: any) => 
   api.post(`/payments/create-payment-intent`, paymentData);
 
+export const createRazorpayOrder = (paymentData: any) => 
+  api.post(`/payments/create-razorpay-order`, paymentData);
+
+export const verifyRazorpayPayment = (paymentData: any) => 
+  api.post(`/payments/verify-razorpay-payment`, paymentData);
+
 export const confirmPayment = (paymentData: any) => 
   api.post(`/payments/confirm`, paymentData);
 
@@ -204,3 +210,48 @@ export const updateMenuItem = (tiffinCenterId: string, menuItemId: string, menuI
 
 export const deleteMenuItem = (tiffinCenterId: string, menuItemId: string) => 
   api.delete(`/tiffin-centers/${tiffinCenterId}/menu/${menuItemId}`);
+
+// Accessory functions
+export const getAccessories = (params?: any) => 
+  api.get(`/accessories`, { params });
+
+export const getAccessory = (id: string) => 
+  api.get(`/accessories/${id}`);
+
+export const createAccessory = (accessoryData: any) => 
+  api.post(`/accessories`, accessoryData);
+
+export const updateAccessory = (id: string, accessoryData: any) => 
+  api.put(`/accessories/${id}`, accessoryData);
+
+export const deleteAccessory = (id: string) => 
+  api.delete(`/accessories/${id}`);
+
+// Cart functions
+export const getCart = () => 
+  api.get(`/cart`);
+
+export const addToCart = (cartItem: any) => 
+  api.post(`/cart/add`, cartItem);
+
+export const updateCartItem = (itemId: string, quantity: number) => 
+  api.put(`/cart/update/${itemId}`, { quantity });
+
+export const removeFromCart = (itemId: string) => 
+  api.delete(`/cart/remove/${itemId}`);
+
+export const clearCart = () => 
+  api.delete(`/cart/clear`);
+
+// Order functions
+export const getOrders = (params?: any) => 
+  api.get(`/orders`, { params });
+
+export const getOrder = (id: string) => 
+  api.get(`/orders/${id}`);
+
+export const createOrder = (orderData: any) => 
+  api.post(`/orders`, orderData);
+
+export const cancelOrder = (id: string) => 
+  api.put(`/orders/${id}/cancel`);

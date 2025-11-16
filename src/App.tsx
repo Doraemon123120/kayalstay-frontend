@@ -11,11 +11,17 @@ import MyBookings from "./pages/MyBookings";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import { getToken } from "./services/api";
-import { useState, useEffect } from "react";
 import TiffinCenters from "./pages/TiffinCenters";
 import TiffinCenterForm from "./pages/TiffinCenterForm";
 import TiffinCenterDetail from "./pages/TiffinCenterDetail";
+import Accessories from "./pages/Accessories";
+import AccessoryDetail from "./pages/AccessoryDetail";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import OrderDetail from "./pages/OrderDetail";
+import { getToken } from "./services/api";
+import { useState, useEffect } from "react";
 
 export default function App() {
   const [isAuthed, setIsAuthed] = useState(!!getToken());
@@ -207,10 +213,12 @@ export default function App() {
           <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>
             <Link to="/tiffin-centers" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Tiffin Centers</Link>
+            <Link to="/accessories" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Accessories</Link>
             {isAuthed ? (
               <>
                 <Link to="/favorites" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Favorites</Link>
                 <Link to="/my-bookings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>My Bookings</Link>
+                <Link to="/cart" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>🛒 Cart</Link>
                 <Link
                   to="/new"
                   style={{
@@ -309,6 +317,12 @@ export default function App() {
           <Route path="/new" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
           <Route path="/edit/:id" element={isAuthed ? <PropertyForm /> : <Navigate to="/login" />} />
           <Route path="/dashboard" element={isAuthed ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/accessories" element={<Accessories />} />
+          <Route path="/accessories/:id" element={<AccessoryDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
         </Routes>
       </main>
 

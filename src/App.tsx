@@ -203,8 +203,8 @@ export default function App() {
               src="/logo192.png" 
               alt="Quickit Logo" 
               style={{
-                width: '80px',
-                height: '80px',
+                width: '100px',
+                height: '100px',
                 transition: 'transform 0.3s ease'
               }}
               onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}

@@ -360,7 +360,7 @@ export default function PropertyDetail() {
               textAlign: 'center',
               lineHeight: '1.6'
             }}>
-              You won't be charged yet. By selecting "Book Now", you agree to KAYALSTAY's Terms of Service.
+              You won't be charged yet. By selecting "Book Now", you agree to Quickit's Terms of Service.
             </div>
           </div>
 

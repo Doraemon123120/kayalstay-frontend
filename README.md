@@ -1,6 +1,6 @@
-# KAYALSTAY Frontend
+# Quickit Frontend
 
-This is the frontend for the KAYALSTAY rental platform.
+This is the frontend for the Quickit rental platform.
 
 ## Setup Instructions
 

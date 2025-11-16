@@ -92,7 +92,7 @@ export default function Login() {
         color: '#626C71',
         marginBottom: '30px',
         fontSize: '14px'
-      }}>Login to your KAYALSTAY account</p>
+      }}>Login to your Quickit account</p>
       
       {error && <div style={{
         background: 'rgba(239, 68, 68, 0.1)',

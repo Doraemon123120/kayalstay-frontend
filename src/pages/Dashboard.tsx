@@ -44,10 +44,11 @@ export default function Dashboard() {
           letterSpacing: '1px'
         }}>Welcome back, {user?.name || 'User'}!</h1>
         <p style={{
-          fontSize: '16px',
-          opacity: 0.95,
-          fontWeight: 500
-        }}>Manage your property listings on KAYALSTAY</p>
+          color: '#626C71',
+          marginBottom: '30px',
+          fontSize: '16px'
+        }}>Manage your property listings on Quickit</p>
+
       </div>
 
       {/* Profile and Action Bar */}

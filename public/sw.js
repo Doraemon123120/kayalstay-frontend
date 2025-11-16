@@ -1,5 +1,5 @@
 // Simple service worker for PWA support
-const CACHE_NAME = 'kayalstay-v1';
+const CACHE_NAME = 'quickit-v1';
 const urlsToCache = [
   '/',
   '/index.html',

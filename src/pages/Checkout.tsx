@@ -120,7 +120,7 @@ export default function Checkout() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: amount * 100, // Razorpay expects amount in paise
         currency: "INR",
-        name: "KAYALSTAY",
+        name: "Quickit",
         description: "Accessory Rental Payment",
         order_id: razorpayOrderId,
         handler: async function (response: any) {

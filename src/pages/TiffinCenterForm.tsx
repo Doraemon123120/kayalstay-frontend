@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createTiffinCenter, getTiffinCenter, updateTiffinCenter } from "../services/api";
 import { TiffinCenter, MenuItem } from "../models/TiffinCenter";
+import MapPicker from "../components/MapPicker";
 
 export default function TiffinCenterForm() {
   const { id } = useParams();
@@ -12,7 +13,7 @@ export default function TiffinCenterForm() {
     name: "",
     description: "",
     address: "",
-    location: { lat: 0, lng: 0 },
+    location: { lat: 22.5726, lng: 88.3639 }, // Default to Kolkata
     phone: "",
     email: "",
     cuisine: [] as string[],
@@ -433,6 +434,24 @@ export default function TiffinCenterForm() {
             }}>
               Right-click on the map and select "What's here?" to get coordinates
             </p>
+          </div>
+          
+          <MapPicker
+            lat={formData.location.lat || 22.5726}
+            lng={formData.location.lng || 88.3639}
+            onLocationChange={(lat: number, lng: number) => setFormData({
+              ...formData,
+              location: { lat, lng }
+            })}
+          />
+          <div style={{ 
+            marginTop: '10px', 
+            padding: '10px', 
+            background: 'rgba(6, 182, 212, 0.05)', 
+            borderRadius: '8px',
+            fontSize: '14px'
+          }}>
+            <strong>Selected Coordinates:</strong> {formData.location.lat.toFixed(6)}, {formData.location.lng.toFixed(6)}
           </div>
         </div>
         

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { LatLng } from "leaflet";
 import { api } from "../services/api";
 
 // Fix for default marker icons in Leaflet
@@ -14,10 +14,10 @@ L.Icon.Default.mergeOptions({
 
 // Location marker component that handles map clicks
 function LocationMarker({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) {
-  const [position, setPosition] = useState<L.LatLng | null>(null);
+  const [position, setPosition] = useState<LatLng | null>(null);
   
   const map = useMapEvents({
-    click(e) {
+    click(e: any) {
       setPosition(e.latlng);
       onLocationSelect(e.latlng.lat, e.latlng.lng);
     },
@@ -32,7 +32,15 @@ function LocationMarker({ onLocationSelect }: { onLocationSelect: (lat: number, 
 
 // Property marker component
 function PropertyMarker({ property }: { property: any }) {
-  const position: [number, number] = [property.location.lat, property.location.lng];
+  // Handle both formats: new GeoJSON format and old format
+  let position: [number, number] = [22.5726, 88.3639]; // Default to Kolkata
+  if (property.location && property.location.coordinates) {
+    // New GeoJSON format: [longitude, latitude]
+    position = [property.location.coordinates[1], property.location.coordinates[0]];
+  } else if (property.location && property.location.lat && property.location.lng) {
+    // Old format
+    position = [property.location.lat, property.location.lng];
+  }
   
   return (
     <Marker position={position}>
@@ -62,7 +70,11 @@ function PropertyMarker({ property }: { property: any }) {
   );
 }
 
-export default function MapSearch() {
+interface MapSearchProps {
+  onPropertiesUpdate?: (properties: any[]) => void;
+}
+
+export default function MapSearch({ onPropertiesUpdate }: MapSearchProps) {
   const [properties, setProperties] = useState<any[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [searchRadius, setSearchRadius] = useState<number>(10); // in kilometers
@@ -77,7 +89,13 @@ export default function MapSearch() {
     try {
       setLoading(true);
       const response = await api.get("/properties");
-      setProperties(response.data);
+      // The main properties route returns { items, total, page, pages }
+      const propertiesData = response.data.items || response.data;
+      setProperties(propertiesData);
+      // Notify parent component of property update
+      if (onPropertiesUpdate) {
+        onPropertiesUpdate(propertiesData);
+      }
     } catch (error) {
       console.error("Error loading properties:", error);
     } finally {
@@ -93,7 +111,13 @@ export default function MapSearch() {
       setLoading(true);
       // Search for properties near the selected location
       const response = await api.get(`/properties/search?lat=${lat}&lng=${lng}&radius=${searchRadius}`);
-      setProperties(response.data);
+      // The search route returns just the properties array
+      const propertiesData = response.data;
+      setProperties(propertiesData);
+      // Notify parent component of property update
+      if (onPropertiesUpdate) {
+        onPropertiesUpdate(propertiesData);
+      }
     } catch (error) {
       console.error("Error searching properties:", error);
     } finally {

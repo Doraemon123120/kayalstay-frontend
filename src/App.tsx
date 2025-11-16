@@ -143,7 +143,7 @@ export default function App() {
               WebkitTextFillColor: 'transparent',
               marginBottom: '20px',
               letterSpacing: '2px'
-            }}>KAYALSTAY</h2>
+            }}>Quickit</h2>
             <p style={{
               fontSize: '16px',
               color: '#626C71',
@@ -196,7 +196,7 @@ export default function App() {
             WebkitTextFillColor: 'transparent',
             textDecoration: 'none'
           }}>
-            KAYALSTAY
+            Quickit
             <span style={{
               background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
               color: 'white',

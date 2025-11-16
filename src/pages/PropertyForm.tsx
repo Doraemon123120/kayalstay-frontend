@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
+import MapPicker from "../components/MapPicker";
 
 export default function PropertyForm() {
   const nav = useNavigate();
@@ -20,6 +21,7 @@ export default function PropertyForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(isEditing);
+  const [location, setLocation] = useState({ lat: 22.5726, lng: 88.3639 }); // Default to Kolkata
 
   // Load existing property data if editing
   useEffect(() => {
@@ -47,6 +49,10 @@ export default function PropertyForm() {
     }
   }, [id, isEditing]);
 
+  const handleLocationChange = (lat: number, lng: number) => {
+    setLocation({ lat, lng });
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -63,6 +69,8 @@ export default function PropertyForm() {
     fd.append("address", address);
     fd.append("contactPhone", contactPhone);
     fd.append("contactEmail", contactEmail);
+    fd.append("location[lat]", location.lat.toString());
+    fd.append("location[lng]", location.lng.toString());
     if (amenities) fd.append("amenities", amenities);
     if (images) {
       Array.from(images).forEach((f, index) => {
@@ -147,7 +155,7 @@ export default function PropertyForm() {
           fontSize: '16px',
           opacity: 0.95,
           fontWeight: 500
-        }}>{isEditing ? 'Update your property details on KAYALSTAY' : 'List your property on KAYALSTAY and reach thousands of potential tenants'}</p>
+        }}>{isEditing ? 'Update your property details on Quickit' : 'List your property on Quickit and reach thousands of potential tenants'}</p>
       </div>
 
       {/* Form */}
@@ -277,6 +285,24 @@ export default function PropertyForm() {
               onChange={(e) => setAddress(e.target.value)}
               style={inputStyle}
             />
+          </div>
+          
+          <div style={{ marginTop: '20px' }}>
+            <label style={labelStyle}>📍 Select Location on Map</label>
+            <MapPicker 
+              lat={location.lat} 
+              lng={location.lng} 
+              onLocationChange={handleLocationChange} 
+            />
+            <div style={{ 
+              marginTop: '10px', 
+              padding: '10px', 
+              background: 'rgba(6, 182, 212, 0.05)', 
+              borderRadius: '8px',
+              fontSize: '14px'
+            }}>
+              <strong>Selected Coordinates:</strong> {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+            </div>
           </div>
         </div>
 
@@ -466,7 +492,7 @@ export default function PropertyForm() {
           fontSize: '13px',
           color: '#626C71'
         }}>
-          By {isEditing ? 'updating' : 'posting'}, you agree to KAYALSTAY's terms and conditions
+          By {isEditing ? 'updating' : 'posting'}, you agree to Quickit's terms and conditions
         </p>
       </form>
         </>

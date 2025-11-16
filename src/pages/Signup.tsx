@@ -57,7 +57,7 @@ export default function Signup() {
         color: '#626C71',
         marginBottom: '30px',
         fontSize: '14px'
-      }}>Join KAYALSTAY and find your perfect stay</p>
+      }}>Join Quickit and find your perfect stay</p>
       
       {error && <div style={{
         background: 'rgba(239, 68, 68, 0.1)',

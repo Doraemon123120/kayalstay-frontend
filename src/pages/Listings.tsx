@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, addFavorite, removeFavorite, getFavorites, getPropertyAverageRating } from "../services/api";
 import { Link } from "react-router-dom";
+import MapSearch from "../components/MapSearch";
 
 type Property = {
   _id: string;
@@ -99,6 +100,19 @@ export default function Listings() {
     }
   };
 
+  // Handle properties update from MapSearch
+  const handleMapSearchUpdate = (properties: any[]) => {
+    // Convert properties to the format expected by the Listings page
+    const formattedProperties = properties.map(property => ({
+      ...property,
+      averageRating: property.averageRating || 0,
+      totalReviews: property.reviewCount || 0
+    }));
+    
+    setItems(formattedProperties);
+    setLoading(false);
+  };
+
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
       {/* Hero Section */}
@@ -123,6 +137,9 @@ export default function Listings() {
           fontWeight: 500
         }}>Browse thousands of verified properties across India</p>
       </div>
+
+      {/* Map Search Component */}
+      <MapSearch onPropertiesUpdate={handleMapSearchUpdate} />
 
       {/* Search Filters */}
       <div style={{
@@ -352,7 +369,7 @@ export default function Listings() {
             color: '#626C71',
             marginBottom: '24px',
             fontSize: '16px'
-          }}>Be the first to post a rental property on KAYALSTAY!</p>
+          }}>Be the first to post a rental property on Quickit!</p>
           <a
             href="/signup"
             style={{

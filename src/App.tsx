@@ -47,14 +47,11 @@ export default function App() {
     // Also check on focus to catch changes from other tabs
     window.addEventListener('focus', handleStorageChange);
 
-    // Check if this is the first visit - use sessionStorage instead of localStorage
-    const hasVisitedThisSession = sessionStorage.getItem('hasVisitedQuickit');
+    // Check if this is the first visit
     const hasVisitedBefore = localStorage.getItem('hasVisitedQuickit');
     
-    if (!hasVisitedThisSession && !hasVisitedBefore) {
+    if (!hasVisitedBefore) {
       setShowWelcome(true);
-      sessionStorage.setItem('hasVisitedQuickit', 'true');
-      localStorage.setItem('hasVisitedQuickit', 'true');
     }
 
     // Cleanup listeners
@@ -82,7 +79,6 @@ export default function App() {
   }, []);
 
   const closeWelcome = () => {
-    sessionStorage.setItem('hasVisitedQuickit', 'true');
     localStorage.setItem('hasVisitedQuickit', 'true');
     setShowWelcome(false);
   };

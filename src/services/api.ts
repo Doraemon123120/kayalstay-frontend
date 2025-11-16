@@ -179,3 +179,28 @@ export const cancelBooking = (id: string) =>
 
 export const getPropertyBookings = (propertyId: string) => 
   api.get(`/bookings/property/${propertyId}`);
+
+// Tiffin Center functions
+export const getTiffinCenters = (params?: any) => 
+  api.get(`/tiffin-centers`, { params });
+
+export const getTiffinCenter = (id: string) => 
+  api.get(`/tiffin-centers/${id}`);
+
+export const createTiffinCenter = (tiffinCenterData: any) => 
+  api.post(`/tiffin-centers`, tiffinCenterData);
+
+export const updateTiffinCenter = (id: string, tiffinCenterData: any) => 
+  api.put(`/tiffin-centers/${id}`, tiffinCenterData);
+
+export const deleteTiffinCenter = (id: string) => 
+  api.delete(`/tiffin-centers/${id}`);
+
+export const addMenuItem = (tiffinCenterId: string, menuItem: any) => 
+  api.post(`/tiffin-centers/${tiffinCenterId}/menu`, menuItem);
+
+export const updateMenuItem = (tiffinCenterId: string, menuItemId: string, menuItem: any) => 
+  api.put(`/tiffin-centers/${tiffinCenterId}/menu/${menuItemId}`, menuItem);
+
+export const deleteMenuItem = (tiffinCenterId: string, menuItemId: string) => 
+  api.delete(`/tiffin-centers/${tiffinCenterId}/menu/${menuItemId}`);

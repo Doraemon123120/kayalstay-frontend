@@ -13,6 +13,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { getToken } from "./services/api";
 import { useState, useEffect } from "react";
+import TiffinCenters from "./pages/TiffinCenters";
+import TiffinCenterForm from "./pages/TiffinCenterForm";
+import TiffinCenterDetail from "./pages/TiffinCenterDetail";
 
 export default function App() {
   const [isAuthed, setIsAuthed] = useState(!!getToken());
@@ -203,6 +206,7 @@ export default function App() {
           </Link>
           <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>
+            <Link to="/tiffin-centers" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Tiffin Centers</Link>
             {isAuthed ? (
               <>
                 <Link to="/favorites" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Favorites</Link>
@@ -290,6 +294,10 @@ export default function App() {
           <Route path="/" element={<Navigate to="/listings" />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/listings/:id" element={<PropertyDetail />} />
+          <Route path="/tiffin-centers" element={<TiffinCenters />} />
+          <Route path="/tiffin-centers/:id" element={<TiffinCenterDetail />} />
+          <Route path="/new-tiffin-center" element={isAuthed ? <TiffinCenterForm /> : <Navigate to="/login" />} />
+          <Route path="/edit-tiffin-center/:id" element={isAuthed ? <TiffinCenterForm /> : <Navigate to="/login" />} />
           <Route path="/favorites" element={isAuthed ? <Favorites /> : <Navigate to="/login" />} />
           <Route path="/book/:id" element={isAuthed ? <Booking /> : <Navigate to="/login" />} />
           <Route path="/my-bookings" element={isAuthed ? <MyBookings /> : <Navigate to="/login" />} />

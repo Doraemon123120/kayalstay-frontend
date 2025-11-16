@@ -197,38 +197,19 @@ export default function App() {
           <Link to="/" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
             textDecoration: 'none'
           }}>
             <img 
               src="/logo192.png" 
               alt="Quickit Logo" 
               style={{
-                width: '40px',
-                height: '40px'
-              }} 
+                width: '60px',
+                height: '60px',
+                transition: 'transform 0.3s ease'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
             />
-            <div style={{
-              fontSize: '24px',
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Quickit
-              <span style={{
-                background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-                color: 'white',
-                borderRadius: '50px',
-                padding: '3px 10px',
-                fontSize: '10px',
-                fontWeight: 700,
-                marginLeft: '8px',
-                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
-              }}>
-                NEW
-              </span>
-            </div>
           </Link>
           <div className="flex gap-6 items-center" style={{ fontSize: '14px', fontWeight: 500 }}>
             <Link to="/listings" style={{ color: '#13343B', textDecoration: 'none', transition: 'all 0.3s' }}>Browse</Link>

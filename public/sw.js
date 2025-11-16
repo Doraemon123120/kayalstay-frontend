@@ -2,9 +2,7 @@
 const CACHE_NAME = 'quickit-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.ico'
+  '/index.html'
 ];
 
 // Install event - cache essential files
@@ -13,18 +11,27 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        // Cache files individually to handle failures gracefully
+        return Promise.allSettled(
+          urlsToCache.map(url => 
+            cache.add(url).catch(err => 
+              console.log(`Failed to cache ${url}:`, err.message)
+            )
+          )
+        );
       })
       .catch((error) => {
-        console.error('Failed to cache files during install:', error);
+        console.error('Failed to open cache:', error);
       })
   );
+  // Activate immediately
+  self.skipWaiting();
 });
 
 // Fetch event - serve cached content when offline
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  // Skip non-GET requests and API calls
+  if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
     return;
   }
   
@@ -36,43 +43,25 @@ self.addEventListener('fetch', (event) => {
           return response;
         }
         
-        // Clone the request because it's a stream and can only be consumed once
-        const fetchRequest = event.request.clone();
-        
-        return fetch(fetchRequest)
+        return fetch(event.request)
           .then((response) => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
+            // Only cache successful responses
+            if (response && response.status === 200 && response.type === 'basic') {
+              const responseToCache = response.clone();
+              
+              caches.open(CACHE_NAME)
+                .then((cache) => {
+                  cache.put(event.request, responseToCache);
+                })
+                .catch(() => {});
             }
             
-            // Clone the response because it's a stream and can only be consumed once
-            const responseToCache = response.clone();
-            
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              })
-              .catch((error) => {
-                console.error('Failed to cache response:', error);
-              });
-              
             return response;
           })
-          .catch((error) => {
-            console.error('Fetch failed:', error);
-            // Return a fallback response or rethrow the error
-            throw error;
+          .catch(() => {
+            // Return cached response or fail silently
+            return caches.match('/index.html');
           });
-      })
-      .catch((error) => {
-        console.error('Cache match failed:', error);
-        // Try to fetch from network as fallback
-        return fetch(event.request).catch(() => {
-          // If both cache and network fail, you could return a fallback page
-          // For now, we'll just rethrow the error
-          throw error;
-        });
       })
   );
 });
@@ -90,8 +79,7 @@ self.addEventListener('activate', (event) => {
         })
       );
     })
-    .catch((error) => {
-      console.error('Failed to clean up old caches:', error);
-    })
+    .then(() => self.clients.claim())
+    .catch(() => {})
   );
 });

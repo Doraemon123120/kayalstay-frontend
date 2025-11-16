@@ -8,17 +8,26 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [resetUrl, setResetUrl] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     setError("");
+    setResetUrl("");
     
     try {
       const response = await api.post("/auth/forgot-password", { email });
       console.log("Forgot password response:", response);
-      setMessage("Password reset instructions have been sent to your email.");
+      
+      // Check if reset URL is provided (when email service fails)
+      if (response.data.resetUrl) {
+        setResetUrl(response.data.resetUrl);
+        setMessage(response.data.message);
+      } else {
+        setMessage("Password reset instructions have been sent to your email.");
+      }
     } catch (err: any) {
       console.error("Forgot password error:", err);
       if (err.response) {
@@ -76,7 +85,24 @@ export default function ForgotPassword() {
         marginBottom: '20px',
         fontSize: '14px',
         fontWeight: 500
-      }}>{message}</div>}
+      }}>
+        {message}
+        {resetUrl && (
+          <div style={{ marginTop: '12px' }}>
+            <a 
+              href={resetUrl}
+              style={{
+                color: '#06B6D4',
+                fontWeight: 600,
+                textDecoration: 'underline',
+                wordBreak: 'break-all'
+              }}
+            >
+              Click here to reset your password
+            </a>
+          </div>
+        )}
+      </div>}
       
       <div style={{ marginBottom: '20px' }}>
         <label style={{

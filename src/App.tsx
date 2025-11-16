@@ -128,7 +128,11 @@ export default function App() {
             textAlign: 'center',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
             position: 'relative',
-            animation: 'slideUp 0.5s ease'
+            animation: 'slideUp 0.5s ease',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
             <h1 style={{
               fontSize: '38px',
@@ -146,7 +150,9 @@ export default function App() {
                 width: '150px',
                 height: '150px',
                 marginBottom: '30px',
-                animation: 'pulse 2s ease-in-out infinite'
+                animation: 'pulse 2s ease-in-out infinite',
+                display: 'block',
+                margin: '0 auto 30px auto'
               }} 
             />
             <p style={{

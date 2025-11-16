@@ -22,6 +22,12 @@ export default function Signup() {
     try {
       const res = await api.post("/auth/send-otp", { email });
       setSuccess(res.data.message || "OTP sent to your email!");
+      
+      // If OTP is in response (when email service fails), show it to user
+      if (res.data.otp) {
+        setSuccess(`Email service not available. Your OTP is: ${res.data.otp}`);
+      }
+      
       setStep(2);
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to send OTP");

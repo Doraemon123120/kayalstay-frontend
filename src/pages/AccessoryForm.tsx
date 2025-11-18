@@ -89,22 +89,47 @@ export default function AccessoryForm() {
     setError("");
 
     try {
+      // Validate required fields
+      if (!formData.name.trim()) {
+        throw new Error("Name is required");
+      }
+      if (!formData.description.trim()) {
+        throw new Error("Description is required");
+      }
+      if (formData.pricePerDay < 0) {
+        throw new Error("Price per day must be 0 or greater");
+      }
+      if (formData.pricePerWeek < 0) {
+        throw new Error("Price per week must be 0 or greater");
+      }
+      if (formData.pricePerMonth < 0) {
+        throw new Error("Price per month must be 0 or greater");
+      }
+      if (formData.quantity < 1) {
+        throw new Error("Quantity must be at least 1");
+      }
+
+      // Create a new FormData object
       const payload = new FormData();
       
       // Add text fields
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'location') {
-          payload.append('location[lat]', formData.location.lat.toString());
-          payload.append('location[lng]', formData.location.lng.toString());
-          if (formData.location.address) {
-            payload.append('location[address]', formData.location.address);
-          }
-        } else {
-          payload.append(key, value.toString());
-        }
-      });
+      payload.append('name', formData.name);
+      payload.append('description', formData.description);
+      payload.append('category', formData.category);
+      payload.append('pricePerDay', formData.pricePerDay.toString());
+      payload.append('pricePerWeek', formData.pricePerWeek.toString());
+      payload.append('pricePerMonth', formData.pricePerMonth.toString());
+      payload.append('quantity', formData.quantity.toString());
+      payload.append('condition', formData.condition);
+      
+      // Add location
+      payload.append('location[lat]', formData.location.lat.toString());
+      payload.append('location[lng]', formData.location.lng.toString());
+      if (formData.location.address) {
+        payload.append('location[address]', formData.location.address);
+      }
 
-      // Add images
+      // Add images as base64 strings
       images.forEach((img, index) => {
         payload.append('images', img);
       });
@@ -117,7 +142,8 @@ export default function AccessoryForm() {
 
       nav("/accessories");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to save accessory");
+      console.error("Accessory form error:", err);
+      setError(err.response?.data?.error || err.response?.data?.message || err.message || "Failed to save accessory");
     } finally {
       setLoading(false);
     }
